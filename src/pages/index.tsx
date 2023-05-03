@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
@@ -6,8 +5,6 @@ import { TestEntity } from "@/entites/test-entity";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import { execTestAPI } from "@/services/testService";
 import { SearchState } from "@/store/searchState";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,7 +23,7 @@ export default function Home() {
     };
 
     return (
-        <main className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}>
+        <main className={`flex min-h-screen flex-col items-center justify-between p-24`}>
             <button onClick={onOpen}>Open Dialog</button>
             <button onClick={sendRequest}>SendRequst</button>
             <p>SearchValue: {searchValue}</p>
