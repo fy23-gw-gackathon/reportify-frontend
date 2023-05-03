@@ -23,8 +23,8 @@ export default function Home() {
     };
 
     return (
-        <main className={`flex min-h-screen flex-col items-center justify-between p-24`}>
-            <button onClick={onOpen}>Open Dialog</button>
+        <main className={`flex min-h-full flex-col items-center justify-between p-24`}>
+            {/* <button onClick={onOpen}>Open Dialog</button>
             <button onClick={sendRequest}>SendRequst</button>
             <p>SearchValue: {searchValue}</p>
             {testData && (
@@ -41,7 +41,7 @@ export default function Home() {
                     <p>Dialog</p>
                     <button onClick={onClose}>close</button>
                 </dialog>
-            )}
+            )} */}
         </main>
     );
 }
