@@ -1,5 +1,4 @@
-
 export type TestEntity = {
-    id: number,
-    name: string
-}
+    id: number;
+    name: string;
+};

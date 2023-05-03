@@ -1,6 +1,6 @@
-import { atom } from 'recoil'
+import { atom } from "recoil";
 
 export const SearchState = atom({
-  key: 'searchState',
-  default:"",
-})
+    key: "searchState",
+    default: "",
+});
