@@ -2,10 +2,10 @@ import { Inter } from "next/font/google";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import { TestEntity } from "@/entites/test-entity";
-import { useDisclosure } from "@/hooks/useDisclosure";
-import { execTestAPI } from "@/services/testService";
-import { SearchState } from "@/store/searchState";
+import { TestEntity } from "@entites/test-entity";
+import { useDisclosure } from "@hooks/useDisclosure";
+import { execTestAPI } from "@services/testService";
+import { SearchState } from "@store/searchState";
 
 const inter = Inter({ subsets: ["latin"] });
 
