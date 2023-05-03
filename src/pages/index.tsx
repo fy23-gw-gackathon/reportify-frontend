@@ -20,6 +20,7 @@ export default function Home() {
             const result = await execTestAPI();
             setTestData(result);
         } catch (error) {
+            setTestData(null);
             console.log(error);
         }
     };

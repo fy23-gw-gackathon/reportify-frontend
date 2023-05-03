@@ -21,10 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 参考：https://github.com/wadeen/nextjs-blog/tree/main
 
 - `src/components`: ボタンなどのUIコンポーネントを保存する場所
-    - `commons`: カスタムボタンなどの共通コンポーネントを格納
-    - `features`: 各ページあるいは機能を構成する為のコンポーネントを格納
 - `src/entities`: (主にAPIから渡ってくる)データモデルを定義
-
 - `src/hooks`: 各ページやコンポーネントで使用するカスタムReact Hooksを定義
 - `src/pages`: 各ページ用のファイルを格納
     - `_app.tsx`と`_document.tsx`以外はファイルパスを元にURLエンドポイントが設定される
