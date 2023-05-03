@@ -1,6 +1,7 @@
 # reportify frontend
 
 ![CI](https://github.com/fy23-gw-gackathon/reportify-frontend/workflows/CI/badge.svg)
+![Deploy](https://github.com/fy23-gw-gackathon/reportify-frontend/workflows/Deploy/badge.svg)
 ![version](https://img.shields.io/badge/version-1.0--SNAPSHOT-blue.svg)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
