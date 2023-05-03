@@ -21,7 +21,7 @@
         "no-restricted-imports": [
             "error",
             {
-                "patterns": ["./", "../", "src", "@app/api", "@app/shared", "@api/models/*", "@api/services/*"]
+                "patterns": ["./", "../", "src"]
             }
         ],
         "eqeqeq": ["error", "always"],
