@@ -1,49 +1,64 @@
 {
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "next/core-web-vitals",
-        "plugin:@next/next/recommended",
-        "plugin:import/recommended",
-        "plugin:import/typescript",
-        "plugin:tailwindcss/recommended",
-        // Prettierと競合するESLintのルールを無効化
-        "prettier"
-    ],
-    "plugins": ["unused-imports", "tailwindcss"],
-    "rules": {
-        "@typescript-eslint/no-empty-function": [
-            "error",
-            {
-                "allow": ["constructors"]
-            }
-        ],
-        "no-restricted-imports": [
-            "error",
-            {
-                "patterns": ["./", "../", "src", "@/"]
-            }
-        ],
-        "eqeqeq": ["error", "always"],
-        "unused-imports/no-unused-imports": "error",
-        "import/order": [
-            "error",
-            {
-                "groups": ["builtin", "external", "parent", "sibling", "index", "object", "type"],
-                "alphabetize": {
-                    "order": "asc"
+    "root": true,
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx", "*.html"],
+            "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "next/core-web-vitals",
+                "plugin:@next/next/recommended",
+                "plugin:import/recommended",
+                "plugin:import/typescript",
+                "plugin:tailwindcss/recommended",
+                // Prettierと競合するESLintのルールを無効化
+                "prettier"
+            ],
+            "plugins": ["unused-imports", "tailwindcss"],
+            "rules": {
+                "@typescript-eslint/no-empty-function": [
+                    "error",
+                    {
+                        "allow": ["constructors"]
+                    }
+                ],
+                "no-restricted-imports": [
+                    "error",
+                    {
+                        "patterns": ["./", "../", "src", "@/"]
+                    }
+                ],
+                "eqeqeq": ["error", "always"],
+                "unused-imports/no-unused-imports": "error",
+                "import/order": [
+                    "error",
+                    {
+                        "groups": ["builtin", "external", "parent", "sibling", "index", "object", "type"],
+                        "alphabetize": {
+                            "order": "asc"
+                        },
+                        "newlines-between": "always"
+                    }
+                ],
+                "import/no-deprecated": "off"
+            },
+            "settings": {
+                "import/parsers": {
+                    "@typescript-eslint/parser": [".ts", ".tsx"]
                 },
-                "newlines-between": "always"
+                "import/resolver": {
+                    "typescript": {}
+                }
             }
-        ],
-        "import/no-deprecated": "off"
-    },
-    "settings": {
-        "import/parsers": {
-            "@typescript-eslint/parser": [".ts", ".tsx"]
         },
-        "import/resolver": {
-            "typescript": {}
+        {
+            "files": [
+                "src/api/**/*.ts"
+            ],
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off",
+                "no-restricted-imports": "off"
+            }
         }
-    }
+    ]
 }

@@ -11,9 +11,11 @@
         "check:lint": "next lint",
         "check:format": "prettier --check src",
         "format": "prettier --write src && eslint --fix src",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "generate:aspida": "npx openapi2aspida"
     },
     "dependencies": {
+        "@aspida/axios": "^1.12.0",
         "@chakra-ui/icons": "^2.0.19",
         "@chakra-ui/react": "^2.6.1",
         "@emotion/react": "^11.10.8",
@@ -22,6 +24,7 @@
         "@types/react": "18.2.0",
         "@types/react-dom": "18.2.1",
         "autoprefixer": "10.4.14",
+        "axios": "^1.4.0",
         "eslint": "8.39.0",
         "eslint-config-next": "13.3.4",
         "framer-motion": "^10.12.7",
