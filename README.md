@@ -4,20 +4,37 @@
 ![Deploy](https://github.com/fy23-gw-gackathon/reportify-frontend/workflows/Deploy/badge.svg)
 ![version](https://img.shields.io/badge/version-1.0--SNAPSHOT-blue.svg)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 開発環境
 
-## Getting Started
+- Node.js 18
+- Next.js 13
 
-First, run the development server:
+## 開発サーバの起動
 
-```bash
-npm run dev
+起動に成功すると [localhost:3000](http://localhost:3000) からアクセスできます。
+
+```sh
+$ npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+###ビルド方法
+
+ビルドに成功すると `out` 直下に静的コンテンツが生成されます。
+
+```sh
+$ npm run build
+$ npm run export
+```
+
+## REST API のモックサーバを起動
+
+起動に成功すると [localhost:8080](http://localhost:8080) から [openapi.yml](./openapi.yml) に定義された REST API を利用できます。
+
+```shell
+$ docker run --rm -it -p 8080:4010 -v $PWD:/tmp stoplight/prism:4 mock -h 0.0.0.0 /tmp/openapi.yml
+```
 
 ## コードアーキテクチャ
-
 
 参考：https://github.com/wadeen/nextjs-blog/tree/main
 

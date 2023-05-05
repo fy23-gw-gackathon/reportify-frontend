@@ -1,0 +1,470 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 7y0vffc8c2fzw
+info:
+  title: Reportify
+  version: 1.0-SNAPSHOT
+  description: ''
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/organizations/{organizationCode}/reports':
+    get:
+      summary: 日報リスト取得API
+      tags:
+        - Report
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: getReports
+      description: ''
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: userId
+          description: ユーザID
+    parameters:
+      - schema:
+          type: string
+        name: organizationCode
+        in: path
+        required: true
+        description: 組織コード
+    post:
+      summary: 日報作成API
+      operationId: createReport
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateReportRequest'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      description: ''
+      tags:
+        - Report
+  '/organizations/{organizationCode}':
+    get:
+      summary: 組織取得API
+      tags:
+        - Organization
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: getOrganization
+      description: ''
+    parameters:
+      - schema:
+          type: string
+        name: organizationCode
+        in: path
+        required: true
+        description: 組織コード
+    put:
+      summary: 組織更新リクエスト
+      operationId: updateOrganization
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+        description: 組織更新リクエスト
+      tags:
+        - Organization
+  '/organization/{organizationCode}/reports/{reportId}':
+    parameters:
+      - schema:
+          type: string
+        name: organizationCode
+        in: path
+        required: true
+        description: 組織コード
+      - schema:
+          type: string
+        name: reportId
+        in: path
+        required: true
+        description: 日報ID
+    get:
+      summary: 日報取得API
+      tags:
+        - Report
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+      operationId: getReport
+      description: ''
+  /organizations:
+    get:
+      summary: 組織リスト取得API
+      tags:
+        - Organization
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsResponse'
+        '401':
+          description: Unauthorized
+      operationId: getOrganizations
+      description: 自分が所属する組織のみ取得できる
+  '/organizations/{organizationCode}/users':
+    parameters:
+      - schema:
+          type: string
+        name: organizationCode
+        in: path
+        required: true
+        description: 組織コード
+    get:
+      summary: 組織のユーザリスト取得API
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: geUsers
+      description: ''
+components:
+  schemas:
+    ReportResponse:
+      title: ReportResponse
+      x-stoplight:
+        id: rsifhm4vmiykh
+      type: object
+      description: 日報レスポンス
+      properties:
+        id:
+          type: string
+          description: 日報レスポンス
+        userId:
+          type: string
+          x-stoplight:
+            id: lf6yice33r22f
+          description: ユーザID
+        body:
+          type: string
+          x-stoplight:
+            id: tqfl570cvste4
+          description: 本文
+          nullable: true
+        reviewBody:
+          type: string
+          x-stoplight:
+            id: 5w6khb5ulz296
+          description: レビュー本文
+        tasks:
+          type: array
+          x-stoplight:
+            id: 5gf55x5z94ul1
+          description: 実施したタスクリスト
+          items:
+            $ref: '#/components/schemas/Task'
+      required:
+        - id
+        - userId
+        - body
+        - reviewBody
+        - tasks
+    ReportsResponse:
+      title: ReportsResponse
+      x-stoplight:
+        id: u8ma8qqvteyo1
+      type: object
+      description: 日報リストレスポンス
+      properties:
+        reports:
+          type: array
+          description: 日報リスト
+          items:
+            $ref: '#/components/schemas/ReportResponse'
+      required:
+        - reports
+    OrganizationResponse:
+      title: OrganizationResponse
+      x-stoplight:
+        id: fpti7lcb066ml
+      type: object
+      description: 組織レスポンス
+      properties:
+        id:
+          type: string
+          description: 組織ID
+        name:
+          type: string
+          x-stoplight:
+            id: sk0abw0pjfjne
+          description: 組織名
+        code:
+          type: string
+          x-stoplight:
+            id: wrws6gkrv6ej2
+          description: 組織コード
+        mvv:
+          $ref: '#/components/schemas/MvvResponse'
+      required:
+        - id
+        - name
+        - code
+        - mvv
+    MvvResponse:
+      title: MVVResponse
+      x-stoplight:
+        id: q6g2mh3stdpmv
+      type: object
+      description: MVVレスポンス
+      properties:
+        mission:
+          type: string
+          x-stoplight:
+            id: z1fcedd0rlj5x
+          description: ミッション
+        vision:
+          type: string
+          x-stoplight:
+            id: 39iz3cne3xp7v
+          description: ビジョン
+        value:
+          type: string
+          x-stoplight:
+            id: rg55m4ssm0u36
+          description: バリュー
+      required:
+        - mission
+        - vision
+        - value
+    UpdateOrganizationRequest:
+      title: UpdateOrganizationRequest
+      x-stoplight:
+        id: 5z111d6w9d6dl
+      type: object
+      description: 組織更新リクエスト
+      properties:
+        name:
+          type: string
+          description: 組織名
+          x-stoplight:
+            id: 6movhaw7v5py8
+        code:
+          type: string
+          x-stoplight:
+            id: m7hpeao1wya9g
+          description: 組織コード
+        mission:
+          type: string
+          x-stoplight:
+            id: g3geh53gykwzw
+          description: ミッション
+        vision:
+          type: string
+          x-stoplight:
+            id: loev0nb14uc5d
+          description: ビジョン
+        value:
+          type: string
+          x-stoplight:
+            id: 3x0xq0zhcifz2
+          description: バリュー
+      required:
+        - name
+        - code
+        - mission
+        - vision
+        - value
+    CreateReportRequest:
+      title: CreateReportRequest
+      x-stoplight:
+        id: j8gy4ztd64iuy
+      type: object
+      description: 日報作成リクエスト
+      properties:
+        body:
+          type: string
+          x-stoplight:
+            id: yqo5an5vmtq8l
+          description: 本文
+        tasks:
+          type: array
+          x-stoplight:
+            id: mtykap39pjuw2
+          description: 実施したタスクリスト
+          items:
+            $ref: '#/components/schemas/Task'
+      required:
+        - body
+        - tasks
+    Task:
+      title: Task
+      x-stoplight:
+        id: ddal08yi62024
+      type: object
+      description: 実施したタスク
+      properties:
+        name:
+          type: string
+          x-stoplight:
+            id: de4yee44cj70g
+          description: タスク名
+        startedAt:
+          type: string
+          x-stoplight:
+            id: clzkv18q2ua5w
+          format: date-time
+          description: 開始日時
+        finishedAt:
+          type: string
+          x-stoplight:
+            id: 937cgxbogzvqf
+          format: date-time
+          description: 終了日時
+      required:
+        - name
+        - startedAt
+        - finishedAt
+    UserResponse:
+      title: UserResponse
+      x-stoplight:
+        id: x208wt5yep1km
+      type: object
+      description: ユーザレスポンス
+      properties:
+        id:
+          type: string
+          description: ユーザID
+        name:
+          type: string
+          x-stoplight:
+            id: 78g3w6ryc8fsq
+          description: ユーザ名
+        email:
+          type: string
+          x-stoplight:
+            id: 24sycm5c9zyxx
+          description: メールアドレス
+        organizations:
+          type: array
+          x-stoplight:
+            id: xp4htlpjwjrz7
+          description: 所属する組織リスト
+          items:
+            $ref: '#/components/schemas/UserOrganization'
+      required:
+        - id
+        - name
+        - email
+        - organizations
+    OrganizationsResponse:
+      title: OrganizationsResponse
+      x-stoplight:
+        id: xj73v408g8b0n
+      type: object
+      description: 組織リストレスポンス
+      properties:
+        organizations:
+          type: array
+          x-stoplight:
+            id: 0p2ypeqcn4a83
+          description: 組織リスト
+          items:
+            $ref: '#/components/schemas/OrganizationsResponse'
+      required:
+        - organizations
+    UsersResponse:
+      title: UsersResponse
+      x-stoplight:
+        id: 9mw0e6gw4tiah
+      type: object
+      description: ユーザリストレスポンス
+      properties:
+        users:
+          type: array
+          x-stoplight:
+            id: 97b0urq9c1g34
+          description: ユーザリスト
+          items:
+            $ref: '#/components/schemas/UserResponse'
+      required:
+        - users
+    UserOrganization:
+      title: UserOrganization
+      x-stoplight:
+        id: 0l3jajvh2p987
+      type: object
+      description: ユーザが所属する組織
+      properties:
+        id:
+          type: string
+          description: 組織ID
+        is_admin:
+          type: boolean
+          x-stoplight:
+            id: isyngs0kebmm1
+          description: ロール
+      required:
+        - id
+        - is_admin
