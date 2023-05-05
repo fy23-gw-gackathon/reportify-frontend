@@ -212,12 +212,12 @@ components:
           x-stoplight:
             id: tqfl570cvste4
           description: 本文
-          nullable: true
         reviewBody:
           type: string
           x-stoplight:
             id: 5w6khb5ulz296
           description: レビュー本文
+          nullable: true
         tasks:
           type: array
           x-stoplight:
