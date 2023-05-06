@@ -10,11 +10,10 @@
                 "plugin:@next/next/recommended",
                 "plugin:import/recommended",
                 "plugin:import/typescript",
-                "plugin:tailwindcss/recommended",
                 // Prettierと競合するESLintのルールを無効化
                 "prettier"
             ],
-            "plugins": ["unused-imports", "tailwindcss"],
+            "plugins": ["unused-imports", "chakra-ui"],
             "rules": {
                 "@typescript-eslint/no-empty-function": [
                     "error",
@@ -40,7 +39,10 @@
                         "newlines-between": "always"
                     }
                 ],
-                "import/no-deprecated": "off"
+                "import/no-deprecated": "off",
+                "chakra-ui/props-order": "error",
+                "chakra-ui/props-shorthand": "error",
+                "chakra-ui/require-specific-component": "error"
             },
             "settings": {
                 "import/parsers": {

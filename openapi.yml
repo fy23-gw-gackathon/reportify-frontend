@@ -12,7 +12,7 @@ paths:
     get:
       summary: 日報リスト取得API
       tags:
-        - Report
+        - Report.ts
       responses:
         '200':
           description: OK
@@ -61,7 +61,7 @@ paths:
           description: Not Found
       description: ''
       tags:
-        - Report
+        - Report.ts
   '/organizations/{organizationCode}':
     get:
       summary: 組織取得API
@@ -131,7 +131,7 @@ paths:
     get:
       summary: 日報取得API
       tags:
-        - Report
+        - Report.ts
       responses:
         '200':
           description: OK
