@@ -7,4 +7,10 @@ export type Methods = {
         /** OK */
         resBody: Types.UsersResponse;
     };
+
+    post: {
+        status: 200;
+        /** OK */
+        resBody: Types.InviteUserRequest;
+    };
 };

@@ -5,6 +5,7 @@ import type { Methods as Methods1 } from "./organizations";
 import type { Methods as Methods2 } from "./organizations/_organizationCode@string";
 import type { Methods as Methods3 } from "./organizations/_organizationCode@string/reports";
 import type { Methods as Methods4 } from "./organizations/_organizationCode@string/users";
+import type { Methods as Methods5 } from "./users/me";
 import type { AspidaClient, BasicHeaders } from "aspida";
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
@@ -13,6 +14,7 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
     const PATH1 = "/reports";
     const PATH2 = "/organizations";
     const PATH3 = "/users";
+    const PATH4 = "/users/me";
     const GET = "GET";
     const POST = "POST";
     const PUT = "PUT";
@@ -102,6 +104,23 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                             fetch<Methods4["get"]["resBody"], BasicHeaders, Methods4["get"]["status"]>(prefix, `${prefix1}${PATH3}`, GET, option)
                                 .json()
                                 .then((r) => r.body),
+                        /**
+                         * @returns OK
+                         */
+                        post: (option?: { config?: T | undefined } | undefined) =>
+                            fetch<Methods4["post"]["resBody"], BasicHeaders, Methods4["post"]["status"]>(
+                                prefix,
+                                `${prefix1}${PATH3}`,
+                                POST,
+                                option
+                            ).json(),
+                        /**
+                         * @returns OK
+                         */
+                        $post: (option?: { config?: T | undefined } | undefined) =>
+                            fetch<Methods4["post"]["resBody"], BasicHeaders, Methods4["post"]["status"]>(prefix, `${prefix1}${PATH3}`, POST, option)
+                                .json()
+                                .then((r) => r.body),
                         $path: () => `${prefix}${prefix1}${PATH3}`,
                     },
                     /**
@@ -146,6 +165,23 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                     .json()
                     .then((r) => r.body),
             $path: () => `${prefix}${PATH2}`,
+        },
+        users: {
+            me: {
+                /**
+                 * @returns OK
+                 */
+                get: (option?: { config?: T | undefined } | undefined) =>
+                    fetch<Methods5["get"]["resBody"], BasicHeaders, Methods5["get"]["status"]>(prefix, PATH4, GET, option).json(),
+                /**
+                 * @returns OK
+                 */
+                $get: (option?: { config?: T | undefined } | undefined) =>
+                    fetch<Methods5["get"]["resBody"], BasicHeaders, Methods5["get"]["status"]>(prefix, PATH4, GET, option)
+                        .json()
+                        .then((r) => r.body),
+                $path: () => `${prefix}${PATH4}`,
+            },
         },
     };
 };

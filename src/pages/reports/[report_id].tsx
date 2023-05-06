@@ -5,17 +5,17 @@ import React from "react";
 
 import { Title } from "@components/Layouts";
 
-export default function Organizations() {
+export default function Report() {
     const router = useRouter();
 
-    const organizationId = router.query.organization_id;
+    const reportId = router.query.report_id;
 
-    if (!organizationId) {
+    if (!reportId) {
         return <Error statusCode={404} />;
     } else {
         return (
             <VStack align={"start"} gap={2} w={"full"}>
-                <Title title={"組織管理"}></Title>
+                <Title title={"日報詳細"}></Title>
 
                 <Card w={"full"} rounded={3}>
                     <CardBody></CardBody>

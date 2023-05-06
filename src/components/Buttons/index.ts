@@ -1,1 +1,1 @@
-export { ImageButton } from "@components/Buttons/ImageButton";
+export { LinkButton } from "@components/Buttons/LinkButton";
