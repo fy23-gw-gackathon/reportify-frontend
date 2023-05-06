@@ -6,11 +6,15 @@ export type ReportResponse = {
     /** ユーザID */
     userId: string;
     /** 本文 */
-    body: string | null;
+    body: string;
     /** レビュー本文 */
-    reviewBody: string;
+    reviewBody: string | null;
     /** 実施したタスクリスト */
     tasks: Task[];
+    /** ユーザ名 */
+    userName: string;
+    /** 投稿時間 */
+    timestamp: string;
 };
 
 /** 日報リストレスポンス */
@@ -102,4 +106,10 @@ export type UserOrganization = {
     id: string;
     /** ロール */
     is_admin: boolean;
+};
+
+/** メンバー招待リクエスト */
+export type InviteUserRequest = {
+    /** メールアドレス */
+    email: string;
 };

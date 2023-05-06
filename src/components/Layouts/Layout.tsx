@@ -1,4 +1,4 @@
-import { Container, Stack, VStack, HStack, Box } from "@chakra-ui/react";
+import { Container, Stack, VStack, HStack, Box, useColorModeValue } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 import { Footer } from "@components/Layouts/Footer";
@@ -19,12 +19,14 @@ export const Layout = ({ children }: Props) => {
                     <VStack
                         align={{ base: "start" }}
                         justify={{ base: "space-between" }}
-                        overflow={"auto"}
+                        overflowY={"auto"}
                         w={"full"}
+                        maxW={"full"}
                         h={"full"}
-                        bgColor={"gray.100"}
+                        bgColor={useColorModeValue("gray.100", "gray.900")}
                     >
-                        <Box mx={6} my={4}>
+                        {/* full を指定すると画面からはみ出てしまうので、サイドバーの長さから計算している */}
+                        <Box w={"calc(100vw - 256px)"} px={6} py={4}>
                             {children}
                         </Box>
                         <Footer></Footer>
