@@ -17,7 +17,7 @@ import {
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
-import { MvvResponse, OrganizationResponse } from "@api/@types";
+import { OrganizationResponse, UpdateOrganizationRequest } from "@api/@types";
 import { UseDisclosureType } from "@types";
 
 export const UpdateMvvModal = ({ disclosure, organization }: { disclosure: UseDisclosureType; organization: OrganizationResponse }) => {
@@ -26,11 +26,13 @@ export const UpdateMvvModal = ({ disclosure, organization }: { disclosure: UseDi
         handleSubmit,
         register,
         formState: { errors },
-    } = useForm<MvvResponse>({
+    } = useForm<UpdateOrganizationRequest>({
         defaultValues: {
             mission: organization.mvv.mission,
             vision: organization.mvv.vision,
             value: organization.mvv.value,
+            name: organization.name,
+            code: organization.code,
         },
     });
     const toast = useToast({

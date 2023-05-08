@@ -17,7 +17,7 @@ import {
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
-import { OrganizationResponse } from "@api/@types";
+import { OrganizationResponse, UpdateOrganizationRequest } from "@api/@types";
 import { UseDisclosureType } from "@types";
 
 export const UpdateStandardInformationModal = ({
@@ -32,8 +32,11 @@ export const UpdateStandardInformationModal = ({
         handleSubmit,
         register,
         formState: { errors },
-    } = useForm<OrganizationResponse>({
+    } = useForm<UpdateOrganizationRequest>({
         defaultValues: {
+            mission: organization.mvv.mission,
+            vision: organization.mvv.vision,
+            value: organization.mvv.value,
             name: organization.name,
             code: organization.code,
         },
