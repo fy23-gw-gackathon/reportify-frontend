@@ -7,6 +7,7 @@ export default function Document() {
                 <meta charSet="utf-8" />
                 <title>Reportify</title>
                 <base href="/" />
+                <meta name="viewport" content="" />
                 <meta content="noindex" name="robots" />
             </Head>
 
