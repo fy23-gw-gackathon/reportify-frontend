@@ -1,6 +1,6 @@
+import { EditIcon } from "@chakra-ui/icons";
 import { Card, CardBody, Divider, Heading, HStack, IconButton, Stack, Text, useDisclosure, VStack } from "@chakra-ui/react";
 import React, { useCallback } from "react";
-import { FaPen } from "react-icons/all";
 
 import { OrganizationResponse } from "@api/@types";
 import { Title } from "@components/Layouts";
@@ -18,7 +18,7 @@ export const ManageStandardInformationCard = ({ organization }: { organization: 
                 <VStack align={"start"} pb={5} spacing={5}>
                     <HStack>
                         <Title title={"基本情報"} />
-                        <IconButton bg="transparent" aria-label={"edit-role"} icon={<FaPen />} onClick={handleEditOrganization} />
+                        <IconButton bg="transparent" aria-label={"edit-role"} icon={<EditIcon />} onClick={handleEditOrganization} />
                     </HStack>
                     <Divider />
                     <Stack>

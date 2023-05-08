@@ -1,4 +1,4 @@
-import { AddIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
 import {
     Button,
     Card,
@@ -24,15 +24,26 @@ import {
     useDisclosure,
     VStack,
 } from "@chakra-ui/react";
-import React, { useCallback } from "react";
-import { FaPen, RiAdminLine, RiUserLine } from "react-icons/all";
+import React, { useCallback, useState } from "react";
+import { RiAdminLine, RiUserLine } from "react-icons/ri";
 
 import { OrganizationResponse, UserOrganization, UserResponse } from "@api/@types";
 import { Title } from "@components/Layouts";
 import { DeleteConfirmModal, EditRoleModal, InviteMemberModal } from "@components/Modals";
 
 export const ManageMembersCard = ({ organization, users }: { organization: OrganizationResponse; users: UserResponse[] }) => {
-    const disclosure = useDisclosure();
+    const inviteMemberDisclosure = useDisclosure();
+    const editRoleDisclosure = useDisclosure();
+    const deleteUserDisclosure = useDisclosure();
+
+    const [selectedUser, setSelectedUser] = useState<UserResponse>();
+
+    const handleEditRole = useCallback(() => {
+        return;
+    }, []);
+    const handleDeleteUser = useCallback(() => {
+        return;
+    }, []);
     return (
         <Card w={"full"} rounded={3}>
             <CardBody>
@@ -40,7 +51,7 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
                     <Title title={"所属メンバー"} />
                     <Divider />
                     <HStack justifyContent="space-between" w="full">
-                        <Button colorScheme="teal" leftIcon={<AddIcon />} onClick={disclosure.onOpen} rounded={3}>
+                        <Button colorScheme="teal" leftIcon={<AddIcon />} onClick={inviteMemberDisclosure.onOpen} rounded={3}>
                             <Text pt={0.5} fontWeight={"normal"}>
                                 メンバー招待
                             </Text>
@@ -64,49 +75,62 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
                             </Thead>
                             <Tbody>
                                 {users.map((user) => {
-                                    return <MemberRow user={user} organizationId={organization.id} key={user.id} />;
+                                    return (
+                                        <Tr key={user.id}>
+                                            <Td>{user.name}</Td>
+                                            <Td>{user.email}</Td>
+                                            <Td>
+                                                <UserRoleTag user={user} organizationId={organization.id} />
+                                            </Td>
+                                            <Td>
+                                                <HStack justifyContent={"center"}>
+                                                    <IconButton
+                                                        bg="transparent"
+                                                        aria-label={"edit-role"}
+                                                        icon={<EditIcon />}
+                                                        onClick={() => {
+                                                            setSelectedUser(user);
+                                                            editRoleDisclosure.onOpen();
+                                                        }}
+                                                    />
+                                                    <IconButton
+                                                        bg="transparent"
+                                                        aria-label={"delete-user"}
+                                                        icon={<DeleteIcon />}
+                                                        onClick={() => {
+                                                            setSelectedUser(user);
+                                                            deleteUserDisclosure.onOpen();
+                                                        }}
+                                                    />
+                                                </HStack>
+                                            </Td>
+                                        </Tr>
+                                    );
                                 })}
                             </Tbody>
                             <TableCaption />
                         </Table>
                     </TableContainer>
                 </VStack>
-                <InviteMemberModal disclosure={disclosure} />
+                {selectedUser && (
+                    <>
+                        <InviteMemberModal disclosure={inviteMemberDisclosure} />
+                        <EditRoleModal
+                            handleEditRole={handleEditRole}
+                            disclosure={editRoleDisclosure}
+                            user={selectedUser}
+                            organizationId={organization.id}
+                        />
+                        <DeleteConfirmModal
+                            disclosure={deleteUserDisclosure}
+                            handleDelete={handleDeleteUser}
+                            deleteResourceName={selectedUser.name}
+                            deleteCategory={"ユーザー"}
+                        />
+                    </>
+                )}
             </CardBody>
         </Card>
-    );
-};
-
-const MemberRow = ({ user, organizationId }: { user: UserResponse; organizationId: string }) => {
-    const editRoleDisclosure = useDisclosure();
-    const deleteUserDisclosure = useDisclosure();
-    const handleEditRole = useCallback(() => {
-        return;
-    }, []);
-    const handleDeleteUser = useCallback(() => {
-        return;
-    }, []);
-    return (
-        <Tr key={user.id}>
-            <Td>{user.name}</Td>
-            <Td>{user.email}</Td>
-            <Td>
-                <UserRoleTag user={user} organizationId={organizationId} />
-            </Td>
-            <Td>
-                <HStack justifyContent={"center"}>
-                    <IconButton bg="transparent" aria-label={"edit-role"} icon={<FaPen />} onClick={editRoleDisclosure.onOpen} />
-                    <IconButton bg="transparent" aria-label={"delete-user"} icon={<DeleteIcon />} onClick={deleteUserDisclosure.onOpen} />
-                </HStack>
-            </Td>
-            <EditRoleModal handleEditRole={handleEditRole} disclosure={editRoleDisclosure} user={user} organizationId={organizationId} />
-            <DeleteConfirmModal
-                disclosure={deleteUserDisclosure}
-                handleDelete={handleDeleteUser}
-                deleteResourceName={user.name}
-                deleteCategory={"ユーザー"}
-            />
-        </Tr>
     );
 };
 
