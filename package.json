@@ -21,6 +21,7 @@
         "@emotion/react": "^11.10.8",
         "@emotion/styled": "^11.10.8",
         "autoprefixer": "10.4.14",
+        "aws-amplify": "^5.2.0",
         "axios": "^1.4.0",
         "eslint-config-next": "13.3.4",
         "framer-motion": "^10.12.7",
@@ -28,7 +29,8 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-icons": "^4.8.0",
-        "recoil": "^0.7.7"
+        "recoil": "^0.7.7",
+        "recoil-persist": "^4.2.0"
     },
     "devDependencies": {
         "@types/node": "18.16.3",
