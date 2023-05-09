@@ -10,7 +10,7 @@ type Props = {
 export const LinkButton = ({ icon, label, href }: Props) => {
     return (
         <NextLink href={href}>
-            <Button colorScheme="teal" leftIcon={icon} rounded={3}>
+            <Button colorScheme="teal" leftIcon={icon} rounded={3} variant={"outline"}>
                 <Text pt={0.5} fontWeight={"normal"}>
                     {label}
                 </Text>
