@@ -1,4 +1,5 @@
 import { Container, Stack, VStack, HStack, Box, useColorModeValue } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 
@@ -11,18 +12,18 @@ type Props = {
     children: ReactNode;
 };
 
-export const Layout = ({ children }: Props) => {
+const _Layout = ({ children }: Props) => {
     const router = useRouter();
-    const { isAuthenticated, isLoading } = useAuthenticatedUserState();
     const bgColor = useColorModeValue("gray.100", "gray.900");
+    const { isAuthenticated } = useAuthenticatedUserState();
 
     useEffect(() => {
-        if (!isAuthenticated && !isLoading) router.replace("/auth/sign_in");
-    }, [isAuthenticated, isLoading, router]);
+        if (router.pathname !== "/auth/sign_in" && !isAuthenticated) router.replace("/auth/sign_in");
+    }, [router, isAuthenticated]);
 
     return (
         <Container as={Stack} align={{ base: "center" }} justify={{ base: "space-between" }} minW={"full"} h={"100vh"} p={0}>
-            {isAuthenticated ? (
+            {isAuthenticated && router.pathname !== "/auth/sign_in" ? (
                 <HStack w={"full"} h={"full"} spacing={0}>
                     <Sidebar></Sidebar>
                     <VStack justify={{ base: "space-between" }} w={"full"} h={"full"} spacing={0}>
@@ -50,3 +51,7 @@ export const Layout = ({ children }: Props) => {
         </Container>
     );
 };
+
+export const Layout = dynamic(() => Promise.resolve(_Layout), {
+    ssr: false,
+});

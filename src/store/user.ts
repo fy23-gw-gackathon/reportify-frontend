@@ -1,10 +1,9 @@
 import { CognitoUser } from "@aws-amplify/auth";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilValue, useSetRecoilState, AtomEffect } from "recoil";
 
 type AuthenticatedUserState = {
     isInitialized: boolean;
-    isLoading: boolean;
     isAuthenticated: boolean;
     email: string;
     emailVerified: boolean;
@@ -27,8 +26,7 @@ const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         });
     };
 
-const defaultAuthenticatedUserState = { isInitialized: false, isAuthenticated: false, isLoading: false, email: "", emailVerified: false };
-const loadingAuthenticatedUserState = { isInitialized: false, isAuthenticated: false, isLoading: true, email: "", emailVerified: false };
+const defaultAuthenticatedUserState = { isInitialized: false, isAuthenticated: false, email: "", emailVerified: false };
 
 const authenticatedUserRecoilState = atom<AuthenticatedUserState>({
     key: "authenticatedUserState",
@@ -37,13 +35,7 @@ const authenticatedUserRecoilState = atom<AuthenticatedUserState>({
 });
 
 export const useAuthenticatedUserState = () => {
-    const [didMount, setDidMount] = useState(false);
-    const authenticatedUserState = useRecoilValue(authenticatedUserRecoilState);
-
-    useEffect(() => {
-        setDidMount(true);
-    }, []);
-    return didMount ? authenticatedUserState : loadingAuthenticatedUserState;
+    return useRecoilValue(authenticatedUserRecoilState);
 };
 
 export const useAuthenticatedUserMutator = () => {
@@ -74,7 +66,6 @@ export const useAuthenticatedUserMutator = () => {
 
             setState({
                 isInitialized: true,
-                isLoading: false,
                 isAuthenticated: true,
                 ...attributes,
             });
