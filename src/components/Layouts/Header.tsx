@@ -16,6 +16,7 @@ import {
     useColorMode,
     Link,
 } from "@chakra-ui/react";
+import { Auth } from "aws-amplify";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -23,12 +24,11 @@ import { FiChevronDown } from "react-icons/fi";
 import { useRecoilState } from "recoil";
 
 import { activatedOrganizationState } from "@store/organization";
-import { loginUserState } from "@store/user";
+import { useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
 export const Header = () => {
     const router = useRouter();
-
-    const [loginUser] = useRecoilState(loginUserState);
+    //const [loginUser] = useRecoilState(loginUserState); //useSessionすればいらないかも？
     const [activatedOrganization] = useRecoilState(activatedOrganizationState);
 
     useEffect(() => {
@@ -59,20 +59,7 @@ export const Header = () => {
                     {SwitchColorModeButton()}
                     {InfoMenu()}
 
-                    {loginUser ? (
-                        <HStack pl={2}>
-                            <Avatar name={loginUser.name} size={"sm"} />
-                            <VStack alignItems="flex-start" display={{ base: "none", md: "flex" }} ml="2" spacing="1px">
-                                <Text fontSize="sm">{loginUser.name}</Text>
-                                <Text color="gray.600" fontSize="xs">
-                                    Admin
-                                </Text>
-                            </VStack>
-                            <FiChevronDown />
-                        </HStack>
-                    ) : (
-                        <></>
-                    )}
+                    {UserMenu()}
                 </HStack>
             </HStack>
         </Box>
@@ -139,6 +126,40 @@ const SearchOrganizationsMenu = () => {
                         </MenuItem>
                     );
                 })}
+            </MenuList>
+        </Menu>
+    );
+};
+
+const UserMenu = () => {
+    const router = useRouter();
+    const { setAuthenticatedUser } = useAuthenticatedUserMutator();
+    const { email } = useAuthenticatedUserState();
+    const onSignOutClick = async () => {
+        await Auth.signOut();
+        setAuthenticatedUser(undefined);
+        router.replace("/auth/sign_in");
+    };
+
+    return (
+        <Menu>
+            <MenuButton>
+                <HStack pl={2}>
+                    <Avatar name={email} size={"sm"} />
+                    <VStack alignItems="flex-start" display={{ base: "none", md: "flex" }} ml="2" spacing="1px">
+                        <Text fontSize="sm">{email}</Text>
+                        <Text color="gray.600" fontSize="xs">
+                            Admin
+                        </Text>
+                    </VStack>
+                    <FiChevronDown />
+                </HStack>
+            </MenuButton>
+
+            <MenuList minW={"80"}>
+                <MenuItem onClick={onSignOutClick}>
+                    <Text>ログアウト</Text>
+                </MenuItem>
             </MenuList>
         </Menu>
     );
