@@ -31,7 +31,7 @@ const defaultAuthenticatedUserState = { isInitialized: false, isAuthenticated: f
 const authenticatedUserRecoilState = atom<AuthenticatedUserState>({
     key: "authenticatedUserState",
     default: defaultAuthenticatedUserState,
-    effects: [localStorageEffect<AuthenticatedUserState>("addedValue")],
+    effects: [localStorageEffect<AuthenticatedUserState>("userData")],
 });
 
 export const useAuthenticatedUserState = () => {
@@ -42,18 +42,15 @@ export const useAuthenticatedUserMutator = () => {
     const setState = useSetRecoilState(authenticatedUserRecoilState);
     const setAuthenticatedUser = useCallback(
         async (cognitoUser: CognitoUser | undefined) => {
-            console.log("setAuthenticatedUser / cognitoUser:", cognitoUser);
             if (!cognitoUser)
                 return setState((state) => ({
                     ...state,
                     isInitialized: true,
-                    isLoading: false,
                     isAuthenticated: false,
                 }));
 
             const attributes: { email: string; emailVerified: boolean } = await new Promise((resolve) =>
                 cognitoUser.getUserAttributes((_, attributes) => {
-                    console.log("getUserAttributes / attributes:", attributes);
                     const { email, email_verified } = attributes
                         ? Object.fromEntries(attributes.map(({ Name, Value }) => [Name, Value]))
                         : { email: "", email_verified: false };

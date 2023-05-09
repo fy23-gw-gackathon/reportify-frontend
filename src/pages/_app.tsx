@@ -6,6 +6,7 @@ import { RecoilRoot } from "recoil";
 import type { AppProps } from "next/app";
 
 import { Layout } from "@components/Layouts/Layout";
+import { AuthProvider } from "@components/Providers";
 
 const authConfig = {
     aws_project_region: process.env.NEXT_PUBLIC_AWS_PROJECT_REGION,
@@ -21,9 +22,11 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <RecoilRoot>
             <ChakraProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
+                <AuthProvider>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </AuthProvider>
             </ChakraProvider>
         </RecoilRoot>
     );
