@@ -1,6 +1,8 @@
-import { AddIcon, DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import {
     Button,
+    CardHeader,
+    Heading,
     Card,
     CardBody,
     Divider,
@@ -25,10 +27,10 @@ import {
     VStack,
 } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
+import { MdEdit } from "react-icons/md";
 import { RiAdminLine, RiUserLine } from "react-icons/ri";
 
 import { OrganizationResponse, UserOrganization, UserResponse } from "@api/@types";
-import { Title } from "@components/Layouts";
 import { DeleteConfirmModal, EditRoleModal, InviteMemberModal } from "@components/Modals";
 
 export const ManageMembersCard = ({ organization, users }: { organization: OrganizationResponse; users: UserResponse[] }) => {
@@ -46,10 +48,16 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
     }, []);
     return (
         <Card w={"full"} rounded={3}>
+            <CardHeader py={3}>
+                <HStack justify={"space-between"}>
+                    <Heading size="md">所属メンバー</Heading>
+                </HStack>
+            </CardHeader>
+
+            <Divider color={"gray.400"}></Divider>
+
             <CardBody>
                 <VStack align={"start"} spacing={5}>
-                    <Title title={"所属メンバー"} />
-                    <Divider />
                     <HStack justifyContent="space-between" w="full">
                         <Button colorScheme="teal" leftIcon={<AddIcon />} onClick={inviteMemberDisclosure.onOpen} rounded={3}>
                             <Text pt={0.5} fontWeight={"normal"}>
@@ -87,7 +95,7 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
                                                     <IconButton
                                                         bg="transparent"
                                                         aria-label={"edit-role"}
-                                                        icon={<EditIcon />}
+                                                        icon={<MdEdit />}
                                                         onClick={() => {
                                                             setSelectedUser(user);
                                                             editRoleDisclosure.onOpen();
