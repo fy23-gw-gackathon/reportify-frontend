@@ -12,7 +12,7 @@ const navItems = [
     {
         icon: <FiSettings />,
         label: "組織管理",
-        link: "/organizations/XXX",
+        link: "/organization",
     },
 ];
 
