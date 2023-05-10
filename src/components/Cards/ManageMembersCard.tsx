@@ -120,9 +120,9 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
                         </Table>
                     </TableContainer>
                 </VStack>
+                <InviteMemberModal disclosure={inviteMemberDisclosure} />
                 {selectedUser && (
                     <>
-                        <InviteMemberModal disclosure={inviteMemberDisclosure} />
                         <EditRoleModal
                             handleEditRole={handleEditRole}
                             disclosure={editRoleDisclosure}
