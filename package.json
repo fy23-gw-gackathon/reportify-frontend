@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@aspida/axios": "^1.12.0",
+        "@aspida/swr": "^1.12.0",
         "@chakra-ui/icons": "^2.0.19",
         "@chakra-ui/react": "^2.6.1",
         "@emotion/react": "^11.10.8",
@@ -32,7 +33,8 @@
         "react-hook-form": "^7.43.9",
         "react-icons": "^4.8.0",
         "recoil": "^0.7.7",
-        "recoil-persist": "^4.2.0"
+        "recoil-persist": "^4.2.0",
+        "swr": "^2.1.5"
     },
     "devDependencies": {
         "@types/node": "18.16.3",

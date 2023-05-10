@@ -1,30 +1,18 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { VStack, Card, CardBody, Table, Thead, Tbody, Tr, Th, TableContainer, Text, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { IoMdThumbsUp } from "react-icons/io";
 
 import { ReportResponse } from "@api/@types";
 import { LinkButton } from "@components/Buttons";
 import { Title } from "@components/Layouts";
-import { getReports } from "@services";
+import { useOrganizationReports } from "@hooks/useOrganizationReports";
 
 export default function Reports() {
     const router = useRouter();
 
-    const [reports, setReports] = useState<ReportResponse[]>([]);
-
-    useEffect(() => {
-        /// TODO: organizationCodeをUserなどから取れるようにする
-        getReports("NewGraduateTraining2")
-            .then((reports) => {
-                setReports(reports);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
+    const { reports } = useOrganizationReports("NewGraduateTraining2");
 
     return (
         <VStack align={"start"} gap={2}>

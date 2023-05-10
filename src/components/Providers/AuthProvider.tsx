@@ -1,7 +1,8 @@
 import { Auth, CognitoUser } from "@aws-amplify/auth";
 import { ReactNode, useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 
-import { useAuthenticatedUserMutator } from "@store/user";
+import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator } from "@store/user";
 
 type Props = {
     children: ReactNode;
@@ -9,6 +10,7 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props) => {
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
+    const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
 
     useEffect(() => {
         Auth.currentAuthenticatedUser()
@@ -16,8 +18,11 @@ export const AuthProvider = ({ children }: Props) => {
                 console.log(error);
                 return undefined;
             })
-            .then((cognitoUser: CognitoUser | undefined) => {
-                console.log(cognitoUser);
+            .then(async (cognitoUser: CognitoUser | undefined) => {
+                if (cognitoUser) {
+                    const idToken = await cognitoUser.getSignInUserSession()?.getIdToken().getJwtToken();
+                    setIdToken({ idToken });
+                }
                 setAuthenticatedUser(cognitoUser);
             });
     }, [setAuthenticatedUser]);
