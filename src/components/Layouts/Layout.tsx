@@ -18,7 +18,7 @@ const _Layout = ({ children }: Props) => {
     const { isAuthenticated } = useAuthenticatedUserState();
     // idToken取得前にuseSWRが走るの防ぐ為
     const { idToken } = useRecoilValue(authenticatedUserTokenRecoilState);
-    if (!isAuthenticated) router.replace("/auth/sign_in");
+    if (!isAuthenticated && !idToken) router.replace("/auth/sign_in");
     const bgColor = useColorModeValue("gray.100", "gray.900");
 
     return (

@@ -2,8 +2,9 @@ import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Imag
 import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
-import { useAuthenticatedUserMutator } from "@store/user";
+import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator } from "@store/user";
 
 export default function SignIn() {
     const router = useRouter();
@@ -11,6 +12,7 @@ export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
+    const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
 
     // テキストフィールドの値がチェンジされた時
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +28,9 @@ export default function SignIn() {
             const user = await Auth.signIn(email, password);
             if (user.challengeName !== "NEW_PASSWORD_REQUIRED") {
                 await setAuthenticatedUser(user);
+                const cognitoInfo = await Auth.currentAuthenticatedUser();
+                const idToken = await cognitoInfo.getSignInUserSession()?.getIdToken().getJwtToken();
+                setIdToken({ idToken });
                 router.replace("/");
                 return;
             }
