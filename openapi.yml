@@ -194,13 +194,15 @@ paths:
       summary: メンバー招待API
       description: ''
       operationId: inviteUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteUserRequest'
+        description: メンバー招待リクエスト
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InviteUserRequest'
         '400':
           description: BadRequest
         '401':
@@ -209,6 +211,60 @@ paths:
           description: Forbidden
       tags:
         - User
+  /organizations/{organizationCode}/users/{userId}:
+    parameters:
+      - schema:
+          type: string
+        name: organizationCode
+        in: path
+        required: true
+        description: 組織コード
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+        description: ユーザーID
+    put:
+      summary: ユーザーロール更新API
+      operationId: updateUserRole
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRoleRequest'
+        description: ユーザーロール更新リクエスト
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+    delete:
+      summary: ユーザー削除API
+      operationId: deleteUser
+      description: ''
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
   /users/me:
     get:
       summary: ログインユーザー取得API
@@ -227,6 +283,30 @@ paths:
           description: Not Found
       operationId: getMe
       description: ''
+  /reports/{reportId}:
+    parameters:
+      - schema:
+          type: string
+        name: reportId
+        in: path
+        required: true
+        description: 日報ID
+    put:
+      operationId: reviewReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewReportRequest'
+        description: 日報レビューリクエスト
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: バッチ処理用の日報レビューAPI
+      tags:
+        - Report
 components:
   schemas:
     ReportResponse:
@@ -476,7 +556,7 @@ components:
             id: 0p2ypeqcn4a83
           description: 組織リスト
           items:
-            $ref: '#/components/schemas/OrganizationsResponse'
+            $ref: '#/components/schemas/OrganizationResponse'
       required:
         - organizations
     UsersResponse:
@@ -523,3 +603,23 @@ components:
           description: メールアドレス
       required:
         - email
+    UpdateUserRoleRequest:
+      title: UpdateUserRoleRequest
+      type: object
+      description: メンバーロール更新リクエスト
+      properties:
+        role:
+          type: boolean
+          description: ロール
+      required:
+        - role
+    ReviewReportRequest:
+      title: ReviewReportRequest
+      type: object
+      description: 日報レビューリクエスト
+      properties:
+        reviewBody:
+          type: string
+          description: レビュー文
+      required:
+        - reviewBody

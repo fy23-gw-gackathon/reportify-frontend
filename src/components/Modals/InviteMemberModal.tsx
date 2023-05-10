@@ -13,7 +13,6 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    useToast,
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -21,30 +20,27 @@ import { useForm } from "react-hook-form";
 import { InviteUserRequest } from "@api/@types";
 import { UseDisclosureType } from "@types";
 
-export const InviteMemberModal = ({ disclosure }: { disclosure: UseDisclosureType }) => {
+export const InviteMemberModal = ({
+    disclosure,
+    handleInviteUser,
+}: {
+    disclosure: UseDisclosureType;
+    handleInviteUser: (inviteUserRequest: InviteUserRequest) => void;
+}) => {
     const {
         handleSubmit,
         register,
         formState: { errors },
+        getValues,
     } = useForm<InviteUserRequest>({
         defaultValues: {
             email: "",
         },
     });
     const { onClose, isOpen } = disclosure;
-    const toast = useToast({
-        title: "メンバー招待",
-        isClosable: true,
-    });
     const handleInvite = useCallback(() => {
-        onClose();
-        toast({
-            description: "メンバーを招待しました。",
-            status: "success",
-            duration: 3000,
-        });
-        return;
-    }, [onClose]);
+        handleInviteUser(getValues());
+    }, [getValues, handleInviteUser]);
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />

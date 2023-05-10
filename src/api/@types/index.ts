@@ -88,7 +88,7 @@ export type UserResponse = {
 /** 組織リストレスポンス */
 export type OrganizationsResponse = {
     /** 組織リスト */
-    organizations: OrganizationsResponse[];
+    organizations: OrganizationResponse[];
 };
 
 /** ユーザリストレスポンス */
@@ -109,4 +109,16 @@ export type UserOrganization = {
 export type InviteUserRequest = {
     /** メールアドレス */
     email: string;
+};
+
+/** メンバーロール更新リクエスト */
+export type UpdateUserRoleRequest = {
+    /** ロール */
+    role: boolean;
+};
+
+/** 日報レビューリクエスト */
+export type ReviewReportRequest = {
+    /** レビュー文 */
+    reviewBody: string;
 };

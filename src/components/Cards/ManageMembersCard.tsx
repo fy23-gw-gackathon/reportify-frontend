@@ -25,27 +25,97 @@ import {
     Tr,
     useDisclosure,
     VStack,
+    useToast,
 } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { RiAdminLine, RiUserLine } from "react-icons/ri";
 
-import { OrganizationResponse, UserOrganization, UserResponse } from "@api/@types";
+import { InviteUserRequest, OrganizationResponse, UserOrganization, UserResponse } from "@api/@types";
 import { DeleteConfirmModal, EditRoleModal, InviteMemberModal } from "@components/Modals";
+import { useOrganizationUsers } from "@hooks/useOrganizationUsers";
 
-export const ManageMembersCard = ({ organization, users }: { organization: OrganizationResponse; users: UserResponse[] }) => {
+export const ManageMembersCard = ({ organization }: { organization: OrganizationResponse }) => {
     const inviteMemberDisclosure = useDisclosure();
     const editRoleDisclosure = useDisclosure();
     const deleteUserDisclosure = useDisclosure();
 
     const [selectedUser, setSelectedUser] = useState<UserResponse>();
 
-    const handleEditRole = useCallback(() => {
-        return;
-    }, []);
-    const handleDeleteUser = useCallback(() => {
-        return;
-    }, []);
+    const { users, inviteUser, deleteUser, updateUserRole, error } = useOrganizationUsers(organization.code);
+
+    const toast = useToast({
+        duration: 3000,
+        isClosable: true,
+    });
+
+    const handleInviteUser = useCallback(
+        async (inviteUserRequest: InviteUserRequest) => {
+            await inviteUser(inviteUserRequest)
+                .then(() => {
+                    toast({
+                        status: "success",
+                        title: "メンバー招待完了",
+                        description: "メンバーを招待しました。",
+                    });
+                    inviteMemberDisclosure.onClose();
+                })
+                .catch((error: Error) => {
+                    toast({
+                        status: "error",
+                        title: "メンバー招待失敗",
+                        description: error.message,
+                    });
+                });
+        },
+        [inviteUser, toast, inviteMemberDisclosure]
+    );
+
+    const handleEditRole = useCallback(async () => {
+        if (selectedUser) {
+            await updateUserRole(selectedUser.id, {
+                role: !selectedUser.organizations.some(
+                    (userOrganization: UserOrganization) => userOrganization.id === organization.id && userOrganization.is_admin
+                ),
+            })
+                .then(() => {
+                    toast({
+                        status: "success",
+                        title: "ロール更新成功",
+                        description: "ロールを更新しました。",
+                    });
+                    editRoleDisclosure.onClose();
+                })
+                .catch((error: Error) => {
+                    toast({
+                        status: "error",
+                        title: "ロール更新失敗",
+                        description: error.message,
+                    });
+                });
+        }
+    }, [selectedUser, updateUserRole, organization.id, toast, editRoleDisclosure]);
+
+    const handleDeleteUser = useCallback(async () => {
+        if (selectedUser) {
+            await deleteUser(selectedUser.id)
+                .then(() => {
+                    toast({
+                        status: "success",
+                        title: "メンバー削除成功",
+                        description: "メンバーを組織から削除しました。",
+                    });
+                    deleteUserDisclosure.onClose();
+                })
+                .catch((error: Error) => {
+                    toast({
+                        status: "error",
+                        title: "メンバー削除失敗",
+                        description: error.message,
+                    });
+                });
+        }
+    }, [deleteUser, deleteUserDisclosure, selectedUser, toast]);
     return (
         <Card w={"full"} rounded={3}>
             <CardHeader py={3}>
@@ -120,7 +190,7 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
                         </Table>
                     </TableContainer>
                 </VStack>
-                <InviteMemberModal disclosure={inviteMemberDisclosure} />
+                <InviteMemberModal disclosure={inviteMemberDisclosure} handleInviteUser={handleInviteUser} />
                 {selectedUser && (
                     <>
                         <EditRoleModal
@@ -143,7 +213,9 @@ export const ManageMembersCard = ({ organization, users }: { organization: Organ
 };
 
 const UserRoleTag = ({ user, organizationId }: { user: UserResponse; organizationId: string }) => {
-    const isAdmin = user.organizations.some((organization: UserOrganization) => organization.id === organizationId && organization.is_admin);
+    const isAdmin = user.organizations
+        ? user.organizations.some((organization: UserOrganization) => organization.id === organizationId && organization.is_admin)
+        : false;
     const colorScheme = isAdmin ? "green" : "gray";
     const icon = isAdmin ? RiAdminLine : RiUserLine;
     const tagLabel = isAdmin ? "管理者" : "メンバー";

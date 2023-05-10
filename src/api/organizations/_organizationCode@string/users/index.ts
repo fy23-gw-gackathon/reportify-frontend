@@ -10,7 +10,7 @@ export type Methods = {
 
     post: {
         status: 200;
-        /** OK */
-        resBody: Types.InviteUserRequest;
+        /** メンバー招待リクエスト */
+        reqBody: Types.InviteUserRequest;
     };
 };
