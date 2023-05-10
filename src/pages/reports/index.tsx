@@ -16,7 +16,8 @@ export default function Reports() {
     const [reports, setReports] = useState<ReportResponse[]>([]);
 
     useEffect(() => {
-        getReports()
+        /// TODO: organizationCodeをUserなどから取れるようにする
+        getReports("NewGraduateTraining2")
             .then((reports) => {
                 setReports(reports);
             })
