@@ -1,29 +1,29 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { VStack, Card, CardBody, Table, Thead, Tbody, Tr, Th, TableContainer, Text, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { IoMdThumbsUp } from "react-icons/io";
 
 import { ReportResponse } from "@api/@types";
 import { LinkButton } from "@components/Buttons";
 import { Title } from "@components/Layouts";
+import { getReports } from "@services";
 
 export default function Reports() {
     const router = useRouter();
 
-    // TODO: 日報リスト取得APIカラ取得すること
-    const reports: ReportResponse[] = [];
-    for (let i = 0; i < 10; i++) {
-        reports.push({
-            id: `XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX${i}`,
-            userId: "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX",
-            userName: "阿部 健太朗",
-            timestamp: "2023-04-01",
-            body: "祇園精舎の鐘の声、諸行無常の響きあり。沙羅双樹の花の色、盛者必衰の理をあらはす。奢れる人も久からず、ただ春の夜の夢のごとし。猛き者も遂にはほろびぬ、偏に風の前の塵におなじ。",
-            reviewBody: i < 5 ? "" : null,
-            tasks: [],
-        });
-    }
+    const [reports, setReports] = useState<ReportResponse[]>([]);
+
+    useEffect(() => {
+        getReports()
+            .then((reports) => {
+                setReports(reports);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <VStack align={"start"} gap={2}>

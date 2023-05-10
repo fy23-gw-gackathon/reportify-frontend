@@ -1,4 +1,7 @@
+import aspida from "@aspida/axios";
 import { dataToURLString } from "aspida";
+import { Auth } from "aws-amplify";
+import axios from "axios";
 
 import type { Methods as Methods0 } from "./organization/_organizationCode@string/reports/_reportId@string";
 import type { Methods as Methods1 } from "./organizations";
@@ -188,3 +191,14 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
 
 export type ApiInstance = ReturnType<typeof api>;
 export default api;
+
+export const getAPIClientWithAuth = async () => {
+    const cognitoIdToken = await (await Auth.currentSession()).getIdToken().getJwtToken();
+    return api(
+        aspida(axios, {
+            headers: {
+                Authorization: `Bearer ${cognitoIdToken}`,
+            },
+        })
+    );
+};

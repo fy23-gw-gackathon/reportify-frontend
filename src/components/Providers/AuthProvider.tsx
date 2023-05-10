@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }: Props) => {
                 return undefined;
             })
             .then((cognitoUser: CognitoUser | undefined) => {
+                console.log(cognitoUser);
                 setAuthenticatedUser(cognitoUser);
             });
     }, [setAuthenticatedUser]);
