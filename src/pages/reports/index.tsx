@@ -7,23 +7,12 @@ import { IoMdThumbsUp } from "react-icons/io";
 import { ReportResponse } from "@api/@types";
 import { LinkButton } from "@components/Buttons";
 import { Title } from "@components/Layouts";
+import { useOrganizationReports } from "@hooks/useOrganizationReports";
 
 export default function Reports() {
     const router = useRouter();
 
-    // TODO: 日報リスト取得APIカラ取得すること
-    const reports: ReportResponse[] = [];
-    for (let i = 0; i < 10; i++) {
-        reports.push({
-            id: `XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX${i}`,
-            userId: "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX",
-            userName: "阿部 健太朗",
-            timestamp: "2023-04-01",
-            body: "祇園精舎の鐘の声、諸行無常の響きあり。沙羅双樹の花の色、盛者必衰の理をあらはす。奢れる人も久からず、ただ春の夜の夢のごとし。猛き者も遂にはほろびぬ、偏に風の前の塵におなじ。",
-            reviewBody: i < 5 ? "" : null,
-            tasks: [],
-        });
-    }
+    const { reports } = useOrganizationReports("NewGraduateTraining2");
 
     return (
         <VStack align={"start"} gap={2}>

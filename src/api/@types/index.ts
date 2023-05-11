@@ -18,10 +18,7 @@ export type ReportResponse = {
 };
 
 /** 日報リストレスポンス */
-export type ReportsResponse = {
-    /** 日報リスト */
-    reports: ReportResponse[];
-};
+export type ReportsResponse = ReportResponse[];
 
 /** 組織レスポンス */
 export type OrganizationResponse = {

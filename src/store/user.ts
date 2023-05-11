@@ -9,6 +9,10 @@ type AuthenticatedUserState = {
     emailVerified: boolean;
 };
 
+type AuthenticatedUserTokenState = {
+    idToken: string | undefined;
+};
+
 const localStorageEffect: <T>(key: string) => AtomEffect<T> =
     (key: string) =>
     ({ setSelf, onSet }) => {
@@ -71,3 +75,8 @@ export const useAuthenticatedUserMutator = () => {
     );
     return { setAuthenticatedUser };
 };
+
+export const authenticatedUserTokenRecoilState = atom<AuthenticatedUserTokenState>({
+    key: "authenticatedUserTokenRecoilState",
+    default: { idToken: undefined },
+});

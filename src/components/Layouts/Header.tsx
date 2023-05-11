@@ -21,10 +21,10 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { activatedOrganizationState } from "@store/organization";
-import { useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
+import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
 export const Header = () => {
     const router = useRouter();
@@ -134,10 +134,12 @@ const SearchOrganizationsMenu = () => {
 const UserMenu = () => {
     const router = useRouter();
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
+    const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
     const { email } = useAuthenticatedUserState();
     const onSignOutClick = async () => {
         await Auth.signOut();
         setAuthenticatedUser(undefined);
+        setIdToken({ idToken: undefined });
         router.replace("/auth/sign_in");
     };
 
