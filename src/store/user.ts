@@ -78,5 +78,5 @@ export const useAuthenticatedUserMutator = () => {
 
 export const authenticatedUserTokenRecoilState = atom<AuthenticatedUserTokenState>({
     key: "authenticatedUserTokenRecoilState",
-    default: { idToken: "" },
+    default: { idToken: undefined },
 });
