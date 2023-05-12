@@ -1,7 +1,9 @@
 import useAspidaSWR from "@aspida/swr";
+import { useRecoilValue } from "recoil";
 
 import { InviteUserRequest, UpdateUserRoleRequest, UserResponse } from "@api/@types";
-import ApiClient from "@utils/api-client";
+import { authenticatedUserTokenRecoilState } from "@store/user";
+import { ApiClientWithAuthToken } from "@utils/api-client";
 
 type UseOrganizationUsersResponse = {
     users: UserResponse[];
@@ -12,8 +14,9 @@ type UseOrganizationUsersResponse = {
     deleteUser: (userId: string) => Promise<void>;
 };
 export const useOrganizationUsers = (organizationCode: string): UseOrganizationUsersResponse => {
-    const organizationsUsersClient = ApiClient.organizations._organizationCode(organizationCode).users;
-
+    const userTokenState = useRecoilValue(authenticatedUserTokenRecoilState);
+    const api = ApiClientWithAuthToken(userTokenState.idToken);
+    const organizationsUsersClient = api.organizations._organizationCode(organizationCode).users;
     const { data, error, mutate } = useAspidaSWR(organizationsUsersClient);
 
     const inviteUser = async (body: InviteUserRequest) => {
