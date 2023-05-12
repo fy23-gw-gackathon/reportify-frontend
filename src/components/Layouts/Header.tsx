@@ -23,7 +23,6 @@ import { useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { useOrganizations } from "@hooks/useOrganizations";
 import { activatedOrganizationState } from "@store/organization";
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
@@ -75,7 +74,7 @@ const SwitchColorModeButton = () => {
 const SearchOrganizationsMenu = () => {
     const router = useRouter();
     const [activatedOrganization, setActivatedOrganization] = useRecoilState(activatedOrganizationState);
-    const { organizations } = useOrganizations();
+    const organizations = [activatedOrganization];
 
     return (
         <Menu>

@@ -160,15 +160,17 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                             .then((r) => r.body),
                     /**
                      * @param option.body - 組織更新リクエスト
+                     * @returns OK
                      */
                     put: (option: { body: Methods2["put"]["reqBody"]; config?: T | undefined }) =>
-                        fetch<void, BasicHeaders, Methods2["put"]["status"]>(prefix, prefix1, PUT, option).send(),
+                        fetch<Methods2["put"]["resBody"], BasicHeaders, Methods2["put"]["status"]>(prefix, prefix1, PUT, option).json(),
                     /**
                      * @param option.body - 組織更新リクエスト
+                     * @returns OK
                      */
                     $put: (option: { body: Methods2["put"]["reqBody"]; config?: T | undefined }) =>
-                        fetch<void, BasicHeaders, Methods2["put"]["status"]>(prefix, prefix1, PUT, option)
-                            .send()
+                        fetch<Methods2["put"]["resBody"], BasicHeaders, Methods2["put"]["status"]>(prefix, prefix1, PUT, option)
+                            .json()
                             .then((r) => r.body),
                     $path: () => `${prefix}${prefix1}`,
                 };

@@ -5,7 +5,7 @@ import { OrganizationResponse } from "@api/@types";
 export const activatedOrganizationState = atom<OrganizationResponse>({
     key: "activatedOrganizationState",
     default: {
-        id: "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        id: "01GZR2TYVGFJKWH35BF2J5Z38E",
         name: "技術統括部エンジニアリング室新卒研修",
         code: "fy23-eng-training",
         mvv: {

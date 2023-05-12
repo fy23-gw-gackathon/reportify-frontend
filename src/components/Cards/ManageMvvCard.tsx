@@ -1,16 +1,18 @@
 import { HStack, Button, Card, CardBody, CardHeader, Divider, Heading, Stack, Text, useDisclosure } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import React from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-import { OrganizationResponse } from "@api/@types";
+import { OrganizationResponse, UpdateOrganizationRequest } from "@api/@types";
 import { UpdateMvvModal } from "@components/Modals";
 
-export const ManageMvvCard = ({ organization }: { organization: OrganizationResponse }) => {
+export const ManageMvvCard = ({
+    organization,
+    updateOrganization,
+}: {
+    organization: OrganizationResponse;
+    updateOrganization: (organizationCode: string, body: UpdateOrganizationRequest) => Promise<void>;
+}) => {
     const disclosure = useDisclosure();
-    const handleEditMvv = useCallback(() => {
-        disclosure.onOpen();
-        return;
-    }, [disclosure]);
     return (
         <Card w={"full"} rounded={3}>
             <CardHeader py={2}>
@@ -36,7 +38,7 @@ export const ManageMvvCard = ({ organization }: { organization: OrganizationResp
                     <Text>{organization.mvv.value}</Text>
                 </Stack>
             </CardBody>
-            <UpdateMvvModal disclosure={disclosure} organization={organization} />
+            <UpdateMvvModal disclosure={disclosure} organization={organization} updateOrganization={updateOrganization} />
         </Card>
     );
 };

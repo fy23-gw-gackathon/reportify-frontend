@@ -23,15 +23,18 @@ import { UseDisclosureType } from "@types";
 export const UpdateStandardInformationModal = ({
     disclosure,
     organization,
+    updateOrganization,
 }: {
     disclosure: UseDisclosureType;
     organization: OrganizationResponse;
+    updateOrganization: (organizationCode: string, body: UpdateOrganizationRequest) => Promise<void>;
 }) => {
     const { isOpen, onClose } = disclosure;
     const {
         handleSubmit,
         register,
         formState: { errors },
+        getValues,
     } = useForm<UpdateOrganizationRequest>({
         defaultValues: {
             mission: organization.mvv.mission,
@@ -47,15 +50,24 @@ export const UpdateStandardInformationModal = ({
         isClosable: true,
     });
 
-    const handleUpdate = useCallback(() => {
-        onClose();
-        toast({
-            description: "組織情報を更新しました。",
-            status: "success",
-            duration: 3000,
-        });
-        return;
-    }, [onClose]);
+    const handleUpdate = useCallback(async () => {
+        return await updateOrganization(organization.code, getValues())
+            .then(() => {
+                onClose();
+                toast({
+                    description: "組織情報を更新しました。",
+                    status: "success",
+                    duration: 3000,
+                });
+            })
+            .catch((error: Error) => {
+                toast({
+                    description: error.message,
+                    status: "error",
+                    duration: 3000,
+                });
+            });
+    }, [getValues, onClose, organization.id, toast, updateOrganization]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
