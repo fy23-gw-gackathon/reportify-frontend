@@ -51,69 +51,69 @@ export const ManageMembersCard = ({ organization }: { organization: Organization
 
     const handleInviteUser = useCallback(
         async (inviteUserRequest: InviteUserRequest) => {
-            await inviteUser(inviteUserRequest)
-                .then(() => {
+            try {
+                await inviteUser(inviteUserRequest).then(() => {
                     toast({
                         status: "success",
                         title: "メンバー招待完了",
                         description: "メンバーを招待しました。",
                     });
                     inviteMemberDisclosure.onClose();
-                })
-                .catch((error: Error) => {
-                    toast({
-                        status: "error",
-                        title: "メンバー招待失敗",
-                        description: error.message,
-                    });
                 });
+            } catch (e) {
+                toast({
+                    status: "error",
+                    title: "メンバー招待失敗",
+                    description: `${e}`,
+                });
+            }
         },
         [inviteUser, toast, inviteMemberDisclosure]
     );
 
     const handleEditRole = useCallback(async () => {
         if (selectedUser) {
-            await updateUserRole(selectedUser.id, {
-                role: !selectedUser.organizations.some(
-                    (userOrganization: UserOrganization) => userOrganization.id === organization.id && userOrganization.is_admin
-                ),
-            })
-                .then(() => {
+            try {
+                await updateUserRole(selectedUser.id, {
+                    role: !selectedUser.organizations.some(
+                        (userOrganization: UserOrganization) => userOrganization.id === organization.id && userOrganization.is_admin
+                    ),
+                }).then(() => {
                     toast({
                         status: "success",
                         title: "ロール更新成功",
                         description: "ロールを更新しました。",
                     });
                     editRoleDisclosure.onClose();
-                })
-                .catch((error: Error) => {
-                    toast({
-                        status: "error",
-                        title: "ロール更新失敗",
-                        description: error.message,
-                    });
                 });
+            } catch (e) {
+                toast({
+                    status: "error",
+                    title: "ロール更新成功",
+                    description: `${e}`,
+                });
+            }
         }
     }, [selectedUser, updateUserRole, organization.id, toast, editRoleDisclosure]);
 
     const handleDeleteUser = useCallback(async () => {
         if (selectedUser) {
-            await deleteUser(selectedUser.id)
-                .then(() => {
+            try {
+                await deleteUser(selectedUser.id).then(() => {
                     toast({
                         status: "success",
                         title: "メンバー削除成功",
                         description: "メンバーを組織から削除しました。",
                     });
                     deleteUserDisclosure.onClose();
-                })
-                .catch((error: Error) => {
-                    toast({
-                        status: "error",
-                        title: "メンバー削除失敗",
-                        description: error.message,
-                    });
                 });
+            } catch (e) {
+                toast({
+                    status: "error",
+                    title: "メンバー削除失敗",
+                    description: `${e}`,
+                });
+            }
         }
     }, [deleteUser, deleteUserDisclosure, selectedUser, toast]);
     return (

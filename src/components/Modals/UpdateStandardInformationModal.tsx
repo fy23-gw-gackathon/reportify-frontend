@@ -51,23 +51,23 @@ export const UpdateStandardInformationModal = ({
     });
 
     const handleUpdate = useCallback(async () => {
-        return await updateOrganization(organization.code, getValues())
-            .then(() => {
+        try {
+            await updateOrganization(organization.code, getValues()).then(() => {
                 onClose();
                 toast({
                     description: "組織情報を更新しました。",
                     status: "success",
                     duration: 3000,
                 });
-            })
-            .catch((error: Error) => {
-                toast({
-                    description: error.message,
-                    status: "error",
-                    duration: 3000,
-                });
             });
-    }, [getValues, onClose, organization.id, toast, updateOrganization]);
+        } catch (e) {
+            toast({
+                description: `${e}`,
+                status: "error",
+                duration: 3000,
+            });
+        }
+    }, [getValues, onClose, organization.code, toast, updateOrganization]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
