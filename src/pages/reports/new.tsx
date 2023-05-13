@@ -1,4 +1,4 @@
-import { CheckCircleIcon, Icon, WarningIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, Icon, QuestionOutlineIcon, WarningIcon } from "@chakra-ui/icons";
 import {
     Card,
     CardBody,
@@ -18,6 +18,7 @@ import {
     Box,
     Tooltip,
     useBoolean,
+    Heading,
 } from "@chakra-ui/react";
 import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
@@ -145,6 +146,10 @@ export default function New() {
                 <GridItem colSpan={4}>
                     <Card mb={4} rounded={3}>
                         <CardBody>
+                            <HStack justifyContent={"center"} mb={4}>
+                                <QuestionOutlineIcon />
+                                <Heading size={"sm"}>良い日報を書くためのヒント</Heading>
+                            </HStack>
                             <HintAccordion value={value} hints={reportHints} insertValue={setValue} />
                         </CardBody>
                     </Card>
