@@ -47,6 +47,7 @@ export const UpdateMvvModal = ({
     const toast = useToast({
         title: "MVVの更新",
         isClosable: true,
+        position: "bottom-left",
     });
 
     const handleUpdate = useCallback(async () => {

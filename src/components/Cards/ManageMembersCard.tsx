@@ -47,6 +47,7 @@ export const ManageMembersCard = ({ organization }: { organization: Organization
     const toast = useToast({
         duration: 3000,
         isClosable: true,
+        position: "bottom-left",
     });
 
     const handleInviteUser = useCallback(

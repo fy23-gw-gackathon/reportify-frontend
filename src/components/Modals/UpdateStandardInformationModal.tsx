@@ -48,6 +48,7 @@ export const UpdateStandardInformationModal = ({
     const toast = useToast({
         title: "組織情報の更新",
         isClosable: true,
+        position: "bottom-left",
     });
 
     const handleUpdate = useCallback(async () => {
