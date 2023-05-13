@@ -73,30 +73,8 @@ const SwitchColorModeButton = () => {
 
 const SearchOrganizationsMenu = () => {
     const router = useRouter();
-    // TODO: 組織リスト取得APIを実行
     const [activatedOrganization, setActivatedOrganization] = useRecoilState(activatedOrganizationState);
-    const organizations = [
-        {
-            id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-            name: "技術統括部エンジニアリング室新卒研修",
-            code: "fy23-eng-training",
-            mvv: {
-                mission: "",
-                vision: "",
-                value: "",
-            },
-        },
-        {
-            id: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-            name: "DeNA.vim",
-            code: "vim",
-            mvv: {
-                mission: "",
-                vision: "",
-                value: "",
-            },
-        },
-    ];
+    const organizations = [activatedOrganization];
 
     return (
         <Menu>

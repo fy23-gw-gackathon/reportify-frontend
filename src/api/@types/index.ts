@@ -18,7 +18,10 @@ export type ReportResponse = {
 };
 
 /** 日報リストレスポンス */
-export type ReportsResponse = ReportResponse[];
+export type ReportsResponse = {
+    /** 日報リスト */
+    reports: ReportResponse[];
+};
 
 /** 組織レスポンス */
 export type OrganizationResponse = {
@@ -88,7 +91,7 @@ export type UserResponse = {
 /** 組織リストレスポンス */
 export type OrganizationsResponse = {
     /** 組織リスト */
-    organizations: OrganizationsResponse[];
+    organizations: OrganizationResponse[];
 };
 
 /** ユーザリストレスポンス */
@@ -109,4 +112,16 @@ export type UserOrganization = {
 export type InviteUserRequest = {
     /** メールアドレス */
     email: string;
+};
+
+/** メンバーロール更新リクエスト */
+export type UpdateUserRoleRequest = {
+    /** ロール */
+    role: boolean;
+};
+
+/** 日報レビューリクエスト */
+export type ReviewReportRequest = {
+    /** レビュー文 */
+    reviewBody: string;
 };

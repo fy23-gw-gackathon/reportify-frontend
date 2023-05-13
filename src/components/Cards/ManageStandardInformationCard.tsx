@@ -1,16 +1,18 @@
 import { Card, Button, HStack, CardBody, CardHeader, Divider, Heading, Stack, Text, useDisclosure } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import React from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-import { OrganizationResponse } from "@api/@types";
+import { OrganizationResponse, UpdateOrganizationRequest } from "@api/@types";
 import { UpdateStandardInformationModal } from "@components/Modals";
 
-export const ManageStandardInformationCard = ({ organization }: { organization: OrganizationResponse }) => {
+export const ManageStandardInformationCard = ({
+    organization,
+    updateOrganization,
+}: {
+    organization: OrganizationResponse;
+    updateOrganization: (organizationCode: string, body: UpdateOrganizationRequest) => Promise<void>;
+}) => {
     const disclosure = useDisclosure();
-    const handleEditOrganization = useCallback(() => {
-        disclosure.onOpen();
-        return;
-    }, [disclosure]);
     return (
         <Card w={"full"} rounded={3}>
             <CardHeader py={2}>
@@ -34,7 +36,7 @@ export const ManageStandardInformationCard = ({ organization }: { organization: 
                     <Text>{organization.code}</Text>
                 </Stack>
             </CardBody>
-            <UpdateStandardInformationModal disclosure={disclosure} organization={organization} />
+            <UpdateStandardInformationModal disclosure={disclosure} organization={organization} updateOrganization={updateOrganization} />
         </Card>
     );
 };

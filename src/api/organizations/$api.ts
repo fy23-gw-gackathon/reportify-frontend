@@ -4,6 +4,7 @@ import type { Methods as Methods0 } from ".";
 import type { Methods as Methods1 } from "./_organizationCode@string";
 import type { Methods as Methods2 } from "./_organizationCode@string/reports";
 import type { Methods as Methods3 } from "./_organizationCode@string/users";
+import type { Methods as Methods4 } from "./_organizationCode@string/users/_userId@string";
 import type { AspidaClient, BasicHeaders } from "aspida";
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
@@ -14,6 +15,7 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
     const GET = "GET";
     const POST = "POST";
     const PUT = "PUT";
+    const DELETE = "DELETE";
 
     return {
         _organizationCode: (val0: string) => {
@@ -54,6 +56,31 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                         `${prefix}${prefix0}${PATH1}${option && option.query ? `?${dataToURLString(option.query)}` : ""}`,
                 },
                 users: {
+                    _userId: (val2: string) => {
+                        const prefix2 = `${prefix0}${PATH2}/${val2}`;
+
+                        return {
+                            /**
+                             * @param option.body - ユーザーロール更新リクエスト
+                             */
+                            put: (option: { body: Methods4["put"]["reqBody"]; config?: T | undefined }) =>
+                                fetch<void, BasicHeaders, Methods4["put"]["status"]>(prefix, prefix2, PUT, option).send(),
+                            /**
+                             * @param option.body - ユーザーロール更新リクエスト
+                             */
+                            $put: (option: { body: Methods4["put"]["reqBody"]; config?: T | undefined }) =>
+                                fetch<void, BasicHeaders, Methods4["put"]["status"]>(prefix, prefix2, PUT, option)
+                                    .send()
+                                    .then((r) => r.body),
+                            delete: (option?: { config?: T | undefined } | undefined) =>
+                                fetch<void, BasicHeaders, Methods4["delete"]["status"]>(prefix, prefix2, DELETE, option).send(),
+                            $delete: (option?: { config?: T | undefined } | undefined) =>
+                                fetch<void, BasicHeaders, Methods4["delete"]["status"]>(prefix, prefix2, DELETE, option)
+                                    .send()
+                                    .then((r) => r.body),
+                            $path: () => `${prefix}${prefix2}`,
+                        };
+                    },
                     /**
                      * @returns OK
                      */
@@ -67,21 +94,16 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                             .json()
                             .then((r) => r.body),
                     /**
-                     * @returns OK
+                     * @param option.body - メンバー招待リクエスト
                      */
-                    post: (option?: { config?: T | undefined } | undefined) =>
-                        fetch<Methods3["post"]["resBody"], BasicHeaders, Methods3["post"]["status"]>(
-                            prefix,
-                            `${prefix0}${PATH2}`,
-                            POST,
-                            option
-                        ).json(),
+                    post: (option: { body: Methods3["post"]["reqBody"]; config?: T | undefined }) =>
+                        fetch<void, BasicHeaders, Methods3["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option).send(),
                     /**
-                     * @returns OK
+                     * @param option.body - メンバー招待リクエスト
                      */
-                    $post: (option?: { config?: T | undefined } | undefined) =>
-                        fetch<Methods3["post"]["resBody"], BasicHeaders, Methods3["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option)
-                            .json()
+                    $post: (option: { body: Methods3["post"]["reqBody"]; config?: T | undefined }) =>
+                        fetch<void, BasicHeaders, Methods3["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option)
+                            .send()
                             .then((r) => r.body),
                     $path: () => `${prefix}${prefix0}${PATH2}`,
                 },
@@ -99,15 +121,17 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                         .then((r) => r.body),
                 /**
                  * @param option.body - 組織更新リクエスト
+                 * @returns OK
                  */
                 put: (option: { body: Methods1["put"]["reqBody"]; config?: T | undefined }) =>
-                    fetch<void, BasicHeaders, Methods1["put"]["status"]>(prefix, prefix0, PUT, option).send(),
+                    fetch<Methods1["put"]["resBody"], BasicHeaders, Methods1["put"]["status"]>(prefix, prefix0, PUT, option).json(),
                 /**
                  * @param option.body - 組織更新リクエスト
+                 * @returns OK
                  */
                 $put: (option: { body: Methods1["put"]["reqBody"]; config?: T | undefined }) =>
-                    fetch<void, BasicHeaders, Methods1["put"]["status"]>(prefix, prefix0, PUT, option)
-                        .send()
+                    fetch<Methods1["put"]["resBody"], BasicHeaders, Methods1["put"]["status"]>(prefix, prefix0, PUT, option)
+                        .json()
                         .then((r) => r.body),
                 $path: () => `${prefix}${prefix0}`,
             };
