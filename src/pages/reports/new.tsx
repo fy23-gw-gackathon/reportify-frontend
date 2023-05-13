@@ -16,21 +16,25 @@ import {
     Button,
     useToast,
     Box,
+    Tooltip,
+    useBoolean,
 } from "@chakra-ui/react";
+import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
 import { BiMailSend } from "react-icons/bi";
 import { useRecoilValue } from "recoil";
 
+import "react-markdown-editor-lite/lib/index.css";
 import { Title } from "@components/Layouts";
 import { useOrganization } from "@hooks/useOrganization";
 import { authenticatedUserTokenRecoilState } from "@store/user";
 import { ApiClientWithAuthToken } from "@utils/api-client";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const MarkdownEditor = dynamic(() => import("react-markdown-editor-lite"), {
+    ssr: false,
+});
 
 type HintType = {
     title: string;
@@ -80,9 +84,12 @@ export default function New() {
     });
 
     const router = useRouter();
+    const mdParser = new MarkdownIt(/* Markdown-it options */);
+    const [isLoading, setLoading] = useBoolean(false);
 
     const handlePost = useCallback(async () => {
         try {
+            setLoading.on();
             await reportsClient.post({ body: { body: value, tasks: [] } });
             toast({
                 title: "成功",
@@ -98,15 +105,27 @@ export default function New() {
                 status: "error",
                 duration: 3000,
             });
+        } finally {
+            setLoading.off();
         }
-    }, [reportsClient, router, toast, value]);
+    }, [reportsClient, router, setLoading, toast, value]);
 
     return (
         <Box as={"section"} gap={2} w={"full"}>
             <Title title={"新規投稿"}></Title>
-            <Grid gap={4} templateColumns="repeat(12, 1fr)" w={"full"}>
+            <Grid gap={4} templateColumns="repeat(12, 1fr)" w={"full"} my={4}>
                 <GridItem colSpan={8}>
-                    <MDEditor height={500} value={value} preview={"edit"} onChange={(newValue = "") => setValue(newValue)} autoFocus />
+                    <Box h={500}>
+                        <MarkdownEditor
+                            style={{ height: "500px", borderRadius: "3px" }}
+                            renderHTML={(text) => mdParser.render(text)}
+                            view={{ menu: true, md: true, html: false }}
+                            canView={{ menu: true, md: true, html: true, both: true, fullScreen: true, hideMenu: true }}
+                            value={value}
+                            autoFocus={false}
+                            onChange={({ text }) => setValue(text)}
+                        />
+                    </Box>
                     <HStack justifyContent={"end"} my={4}>
                         <Button
                             pr={6}
@@ -114,6 +133,7 @@ export default function New() {
                             aria-label={"sendButton"}
                             colorScheme={"teal"}
                             isDisabled={value === ""}
+                            isLoading={isLoading}
                             leftIcon={<Icon as={BiMailSend} mr={2} />}
                             onClick={handlePost}
                             rounded={3}
@@ -148,7 +168,7 @@ const AccordionRow = ({ active = false, title, ...attrs }: { active?: boolean; t
         <AccordionItem>
             <AccordionButton w={"full"}>
                 <HStack justifyContent={"space-between"} w={"full"}>
-                    <TextWithStatus color={"gray"} fontSize={14} active={active}>
+                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active}>
                         {title}
                     </TextWithStatus>
                     <AccordionIcon display={"block"} />
@@ -171,17 +191,18 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                             <HStack my={2}>
                                 {hint.tags &&
                                     hint.tags.map((tag) => (
-                                        <Button
-                                            key={tag}
-                                            fontSize={10}
-                                            isDisabled={isActive}
-                                            onClick={() => {
-                                                insertValue(`${value}\n${tag}`);
-                                            }}
-                                            size={"xs"}
-                                        >
-                                            {tag}
-                                        </Button>
+                                        <Tooltip key={tag} px={2} fontSize={12} hasArrow isDisabled={isActive} label={`${tag}を追加`} rounded={3}>
+                                            <Button
+                                                fontSize={10}
+                                                isDisabled={isActive}
+                                                onClick={() => {
+                                                    insertValue(`${value}\n${tag}`);
+                                                }}
+                                                size={"xs"}
+                                            >
+                                                {tag}
+                                            </Button>
+                                        </Tooltip>
                                     ))}
                             </HStack>
                         </AccordionRow>
