@@ -1,12 +1,25 @@
-import { CognitoUser } from "@aws-amplify/auth";
 import { useCallback } from "react";
 import { atom, useRecoilValue, useSetRecoilState, AtomEffect } from "recoil";
 
+type AuthenticatedUserType =
+    | {
+          /** ユーザID */
+          id: string;
+          /** ユーザ名 */
+          name: string;
+          /** メールアドレス */
+          email: string;
+          /** 所属する組織リスト */
+          organizations: {
+              id: string;
+              /** ロール */
+              is_admin: boolean;
+          }[];
+      }
+    | undefined;
+
 type AuthenticatedUserState = {
-    isInitialized: boolean;
-    isAuthenticated: boolean;
-    email: string;
-    emailVerified: boolean;
+    user: AuthenticatedUserType;
 };
 
 type AuthenticatedUserTokenState = {
@@ -21,7 +34,7 @@ const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         }
         const savedValue = localStorage.getItem(key);
 
-        if (savedValue !== null) {
+        if (savedValue) {
             setSelf(JSON.parse(savedValue));
         }
 
@@ -30,11 +43,9 @@ const localStorageEffect: <T>(key: string) => AtomEffect<T> =
         });
     };
 
-const defaultAuthenticatedUserState = { isInitialized: false, isAuthenticated: false, email: "", emailVerified: false };
-
 const authenticatedUserRecoilState = atom<AuthenticatedUserState>({
     key: "authenticatedUserState",
-    default: defaultAuthenticatedUserState,
+    default: { user: undefined },
     effects: [localStorageEffect<AuthenticatedUserState>("userData")],
 });
 
@@ -45,31 +56,8 @@ export const useAuthenticatedUserState = () => {
 export const useAuthenticatedUserMutator = () => {
     const setState = useSetRecoilState(authenticatedUserRecoilState);
     const setAuthenticatedUser = useCallback(
-        async (cognitoUser: CognitoUser | undefined) => {
-            if (!cognitoUser)
-                return setState((state) => ({
-                    ...state,
-                    isInitialized: true,
-                    isAuthenticated: false,
-                }));
-
-            const attributes: { email: string; emailVerified: boolean } = await new Promise((resolve) =>
-                cognitoUser.getUserAttributes((_, attributes) => {
-                    const { email, email_verified } = attributes
-                        ? Object.fromEntries(attributes.map(({ Name, Value }) => [Name, Value]))
-                        : { email: "", email_verified: false };
-                    resolve({
-                        email,
-                        emailVerified: Boolean(email_verified),
-                    });
-                })
-            );
-
-            setState({
-                isInitialized: true,
-                isAuthenticated: true,
-                ...attributes,
-            });
+        (state: AuthenticatedUserState) => {
+            setState(state);
         },
         [setState]
     );

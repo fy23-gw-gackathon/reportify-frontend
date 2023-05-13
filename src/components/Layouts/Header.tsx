@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
+import { useOrganizations } from "@hooks/useOrganizations";
 import { activatedOrganizationState } from "@store/organization";
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
@@ -33,10 +34,9 @@ export const Header = () => {
 
     useEffect(() => {
         if (router.query.organization !== activatedOrganization.code) {
-            // FIXME: 日報詳細画面でリロードすると「The provided href value is missing query values to be interpolated properly」とエラーが出る
-            // router.replace({
-            //     query: { ...router.query, organization: activatedOrganization.code },
-            // });
+            router.replace({
+                query: { ...router.query, organization: activatedOrganization.code },
+            });
         }
     }, [router, activatedOrganization]);
 
@@ -73,8 +73,9 @@ const SwitchColorModeButton = () => {
 
 const SearchOrganizationsMenu = () => {
     const router = useRouter();
+    const { organizations } = useOrganizations();
+
     const [activatedOrganization, setActivatedOrganization] = useRecoilState(activatedOrganizationState);
-    const organizations = [activatedOrganization];
 
     return (
         <Menu>
@@ -113,10 +114,10 @@ const UserMenu = () => {
     const router = useRouter();
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
     const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
-    const { email } = useAuthenticatedUserState();
+    const { user } = useAuthenticatedUserState();
     const onSignOutClick = async () => {
         await Auth.signOut();
-        setAuthenticatedUser(undefined);
+        setAuthenticatedUser({ user: undefined });
         setIdToken({ idToken: undefined });
         router.replace("/auth/sign_in");
     };
@@ -125,11 +126,11 @@ const UserMenu = () => {
         <Menu>
             <MenuButton>
                 <HStack pl={2}>
-                    <Avatar name={email} size={"sm"} />
+                    <Avatar name={user?.name} size={"sm"} />
                     <VStack alignItems="flex-start" display={{ base: "none", md: "flex" }} ml="2" spacing="1px">
-                        <Text fontSize="sm">{email}</Text>
+                        <Text fontSize="sm">{user?.name}</Text>
                         <Text color="gray.600" fontSize="xs">
-                            Admin
+                            {user ? "管理者" : "メンバー"}
                         </Text>
                     </VStack>
                     <FiChevronDown />

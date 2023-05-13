@@ -15,15 +15,15 @@ type Props = {
 
 const _Layout = ({ children }: Props) => {
     const router = useRouter();
-    const { isAuthenticated } = useAuthenticatedUserState();
+    const { user } = useAuthenticatedUserState();
     // idToken取得前にuseSWRが走るの防ぐ為
     const { idToken } = useRecoilValue(authenticatedUserTokenRecoilState);
-    if (!isAuthenticated && !idToken) router.replace("/auth/sign_in");
+    if (!user && !idToken) router.replace("/auth/sign_in");
     const bgColor = useColorModeValue("gray.100", "gray.900");
 
     return (
         <Container as={Stack} align={{ base: "center" }} justify={{ base: "space-between" }} minW={"full"} h={"100vh"} p={0}>
-            {router.pathname !== "/auth/sign_in" && isAuthenticated && idToken && (
+            {router.pathname !== "/auth/sign_in" && user && idToken && (
                 <HStack w={"full"} h={"full"} spacing={0}>
                     <Sidebar></Sidebar>
                     <VStack justify={{ base: "space-between" }} w={"full"} h={"full"} spacing={0}>

@@ -3,16 +3,19 @@ import { VStack, Card, CardBody, Table, Thead, Tbody, Tr, Th, TableContainer, Te
 import { useRouter } from "next/router";
 import { AiFillWarning } from "react-icons/ai";
 import { IoMdThumbsUp } from "react-icons/io";
+import { useRecoilState } from "recoil";
 
 import { ReportResponse } from "@api/@types";
 import { LinkButton } from "@components/Buttons";
 import { Title } from "@components/Layouts";
 import { useOrganizationReports } from "@hooks/useOrganizationReports";
+import { activatedOrganizationState } from "@store/organization";
 
 export default function Reports() {
     const router = useRouter();
 
-    const { reports } = useOrganizationReports("NewGraduateTraining2");
+    const [activatedOrganization] = useRecoilState(activatedOrganizationState);
+    const { reports } = useOrganizationReports(activatedOrganization.code);
 
     return (
         <VStack align={"start"} gap={2}>

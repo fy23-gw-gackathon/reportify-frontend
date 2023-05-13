@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator } from "@store/user";
+import { ApiClientWithAuthToken } from "@utils/api-client";
 
 export default function SignIn() {
     const router = useRouter();
@@ -27,10 +28,16 @@ export default function SignIn() {
         try {
             const user = await Auth.signIn(email, password);
             if (user.challengeName !== "NEW_PASSWORD_REQUIRED") {
-                await setAuthenticatedUser(user);
                 const cognitoInfo = await Auth.currentAuthenticatedUser();
                 const idToken = await cognitoInfo.getSignInUserSession()?.getIdToken().getJwtToken();
-                setIdToken({ idToken });
+                try {
+                    const api = ApiClientWithAuthToken(idToken);
+                    const user = await (await api.users.me.get()).body;
+                    setAuthenticatedUser({ user });
+                    setIdToken({ idToken });
+                } catch (error) {
+                    console.log(error);
+                }
                 router.replace("/");
                 return;
             }
