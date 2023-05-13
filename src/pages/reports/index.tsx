@@ -1,5 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { VStack, Card, CardBody, Table, Thead, Tbody, Tr, Th, TableContainer, Text, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react";
+import { VStack, Card, CardBody, Table, Thead, Tbody, Tr, Th, TableContainer, Text, Tag, TagLabel, TagLeftIcon, Td } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { AiFillWarning } from "react-icons/ai";
 import { IoMdThumbsUp } from "react-icons/io";
@@ -7,12 +7,13 @@ import { IoMdThumbsUp } from "react-icons/io";
 import { ReportResponse } from "@api/@types";
 import { LinkButton } from "@components/Buttons";
 import { Title } from "@components/Layouts";
+import { useOrganization } from "@hooks/useOrganization";
 import { useOrganizationReports } from "@hooks/useOrganizationReports";
 
 export default function Reports() {
     const router = useRouter();
-
-    const { reports } = useOrganizationReports("NewGraduateTraining2");
+    const { organization } = useOrganization();
+    const { reports } = useOrganizationReports(organization.code);
 
     return (
         <VStack align={"start"} gap={2}>
@@ -43,12 +44,12 @@ export default function Reports() {
                                                     router.push({ pathname: `/reports/[report_id]`, query: { report_id: report.id } });
                                                 }}
                                             >
-                                                <Th>{report.timestamp}</Th>
-                                                <Th>{report.userName}</Th>
-                                                <Th>{ReportStatusTag(report)}</Th>
-                                                <Th>
+                                                <Td>{report.timestamp}</Td>
+                                                <Td>{report.userName}</Td>
+                                                <Td>{ReportStatusTag(report)}</Td>
+                                                <Td>
                                                     <Text>{report.body}</Text>
-                                                </Th>
+                                                </Td>
                                             </Tr>
                                         );
                                     })}

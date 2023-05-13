@@ -62,6 +62,11 @@ paths:
       description: ''
       tags:
         - Report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
   /organizations/{organizationCode}:
     get:
       summary: 組織取得API

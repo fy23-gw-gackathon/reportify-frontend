@@ -19,5 +19,6 @@ export type Methods = {
         status: 201;
         /** Created */
         resBody: Types.CreateReportRequest;
+        reqBody: Types.CreateReportRequest;
     };
 };

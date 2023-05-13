@@ -38,7 +38,7 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                     /**
                      * @returns Created
                      */
-                    post: (option?: { config?: T | undefined } | undefined) =>
+                    post: (option: { body: Methods2["post"]["reqBody"]; config?: T | undefined }) =>
                         fetch<Methods2["post"]["resBody"], BasicHeaders, Methods2["post"]["status"]>(
                             prefix,
                             `${prefix0}${PATH1}`,
@@ -48,7 +48,7 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                     /**
                      * @returns Created
                      */
-                    $post: (option?: { config?: T | undefined } | undefined) =>
+                    $post: (option: { body: Methods2["post"]["reqBody"]; config?: T | undefined }) =>
                         fetch<Methods2["post"]["resBody"], BasicHeaders, Methods2["post"]["status"]>(prefix, `${prefix0}${PATH1}`, POST, option)
                             .json()
                             .then((r) => r.body),
