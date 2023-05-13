@@ -42,6 +42,25 @@ type HintType = {
     body: string;
     tags?: string[];
     checkFunc: (value: string) => boolean;
+    checkWordCount: (value: string) => number;
+    requiredWordCount: number;
+};
+
+const countSectionWordLength = (value: string, regex: RegExp): number => {
+    const pos = value.search(regex);
+    const trimmedValue = value.split("").slice(pos).join("");
+    const sections = trimmedValue.split(/#/).filter((section) => section !== "");
+    if (sections.length === 0) {
+        return 0;
+    }
+    const sectionContents = sections[0].split("\n");
+    if (sectionContents.length < 1) {
+        return 0;
+    }
+    return sectionContents
+        .splice(1)
+        .join("")
+        .replaceAll(/[\s\u{3000}]/gu, "").length;
 };
 
 const reportHints: HintType[] = [
@@ -52,7 +71,12 @@ const reportHints: HintType[] = [
         checkFunc: (value: string) => {
             return !!value.match(/#.+(業務|やったこと)/);
         },
+        checkWordCount: (value: string) => {
+            const regex = /#.+(業務|やったこと).*\n/;
+            return countSectionWordLength(value, regex);
+        },
         tags: ["# 本日の業務内容", "# 今日やったこと"],
+        requiredWordCount: 120,
     },
     {
         title: "問題や課題を明記しているか",
@@ -60,7 +84,12 @@ const reportHints: HintType[] = [
         checkFunc: (value: string) => {
             return !!value.match(/#.+(問題|課題)/);
         },
+        checkWordCount: (value: string) => {
+            const regex = /#.+(問題|課題).*\n/;
+            return countSectionWordLength(value, regex);
+        },
         tags: ["# 問題点", "# 課題点"],
+        requiredWordCount: 120,
     },
     {
         title: "次のアクションプランを書いているか",
@@ -68,7 +97,12 @@ const reportHints: HintType[] = [
         checkFunc: (value: string) => {
             return !!value.match(/#.+(アクション|計画|やること)/);
         },
+        checkWordCount: (value: string) => {
+            const regex = /#.+(アクション|計画|やること).*\n/;
+            return countSectionWordLength(value, regex);
+        },
         tags: ["# ネクストアクション", "# 明日やること", "# 次やること"],
+        requiredWordCount: 80,
     },
 ];
 
@@ -159,21 +193,26 @@ export default function New() {
     );
 }
 
-const TextWithStatus = ({ active, ...attrs }: { active: boolean } & TextProps) => {
+const TextWithStatus = ({ active, overRequiredCount, ...attrs }: { active: boolean; overRequiredCount: boolean } & TextProps) => {
     return (
         <HStack>
-            {active ? <CheckCircleIcon color="green" /> : <WarningIcon color="lightgray" />}
+            {active ? overRequiredCount ? <CheckCircleIcon color="green" /> : <WarningIcon color="orange" /> : <WarningIcon color="lightgray" />}
             <Text {...attrs}>{attrs.children}</Text>
         </HStack>
     );
 };
 
-const AccordionRow = ({ active = false, title, ...attrs }: { active?: boolean; title: string } & AccordionPanelProps) => {
+const AccordionRow = ({
+    active = false,
+    overRequiredCount = false,
+    title,
+    ...attrs
+}: { active?: boolean; overRequiredCount?: boolean; title: string } & AccordionPanelProps) => {
     return (
         <AccordionItem>
             <AccordionButton w={"full"}>
                 <HStack justifyContent={"space-between"} w={"full"}>
-                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active}>
+                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active} overRequiredCount={overRequiredCount}>
                         {title}
                     </TextWithStatus>
                     <AccordionIcon display={"block"} />
@@ -190,8 +229,9 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
             {hints &&
                 hints.map((hint: HintType) => {
                     const isActive = hint.checkFunc(value);
+                    const wordCount = hint.checkWordCount(value);
                     return (
-                        <AccordionRow title={hint.title} active={isActive} key={hint.title}>
+                        <AccordionRow title={hint.title} active={isActive} key={hint.title} overRequiredCount={wordCount >= hint.requiredWordCount}>
                             <Text fontSize={13}>{hint.body}</Text>
                             <HStack my={2}>
                                 {hint.tags &&
@@ -210,6 +250,12 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                                         </Tooltip>
                                     ))}
                             </HStack>
+                            <Text
+                                mt={6}
+                                color={isActive ? (wordCount >= hint.requiredWordCount ? "green" : "orange") : "gray"}
+                                fontSize={13}
+                                textAlign={"right"}
+                            >{`推奨${hint.requiredWordCount}文字 (${wordCount}/${hint.requiredWordCount})`}</Text>
                         </AccordionRow>
                     );
                 })}
