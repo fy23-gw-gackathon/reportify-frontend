@@ -196,7 +196,7 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                                                 fontSize={10}
                                                 isDisabled={isActive}
                                                 onClick={() => {
-                                                    insertValue(`${value}\n${tag}`);
+                                                    insertValue(`${value}\n${tag}\n- `);
                                                 }}
                                                 size={"xs"}
                                             >
