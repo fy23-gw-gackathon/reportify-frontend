@@ -1,8 +1,10 @@
 const withInterceptStdout = require("next-intercept-stdout");
-
-module.exports = withInterceptStdout(
-    {
-        reactStrictMode: true,
-    },
-    (text) => (text.includes("Duplicate atom key") ? "" : text)
+const removeImports = require("next-remove-imports")();
+module.exports = removeImports(
+    withInterceptStdout(
+        {
+            reactStrictMode: true,
+        },
+        (text) => (text.includes("Duplicate atom key") ? "" : text)
+    )
 );

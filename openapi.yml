@@ -47,10 +47,6 @@ paths:
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateReportRequest'
         '400':
           description: Bad Request
         '401':
@@ -62,6 +58,11 @@ paths:
       description: ''
       tags:
         - Report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
   /organizations/{organizationCode}:
     get:
       summary: 組織取得API
