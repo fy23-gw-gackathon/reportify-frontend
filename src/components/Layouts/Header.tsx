@@ -6,8 +6,6 @@ import {
     useColorModeValue,
     useBreakpointValue,
     HStack,
-    Avatar,
-    VStack,
     Menu,
     MenuButton,
     MenuItem,
@@ -20,7 +18,7 @@ import { Auth } from "aws-amplify";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { MdLogout } from "react-icons/md";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { activatedOrganizationState } from "@store/organization";
@@ -121,28 +119,7 @@ const UserMenu = () => {
         router.replace("/auth/sign_in");
     };
 
-    return (
-        <Menu>
-            <MenuButton>
-                <HStack pl={2}>
-                    <Avatar name={email} size={"sm"} />
-                    <VStack alignItems="flex-start" display={{ base: "none", md: "flex" }} ml="2" spacing="1px">
-                        <Text fontSize="sm">{email}</Text>
-                        <Text color="gray.600" fontSize="xs">
-                            Admin
-                        </Text>
-                    </VStack>
-                    <FiChevronDown />
-                </HStack>
-            </MenuButton>
-
-            <MenuList minW={"80"}>
-                <MenuItem onClick={onSignOutClick}>
-                    <Text>ログアウト</Text>
-                </MenuItem>
-            </MenuList>
-        </Menu>
-    );
+    return <IconButton aria-label={""} icon={<MdLogout />} onClick={onSignOutClick} variant="ghost"></IconButton>;
 };
 
 const InfoMenu = () => {
