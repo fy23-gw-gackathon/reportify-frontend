@@ -10,7 +10,7 @@ export const useOrganizationReports = (organizationCode: string) => {
     const { data, error } = useAspidaSWR(api.organizations._organizationCode(organizationCode).reports, { refreshInterval: 10 });
 
     return {
-        reports: data ? data.reports : [],
+        reports: data && data.reports ? data.reports : [],
         error,
     };
 };
