@@ -1,7 +1,22 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Image, Text } from "@chakra-ui/react";
+import {
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    Heading,
+    Input,
+    Link,
+    Stack,
+    Image,
+    Text,
+    IconButton,
+    InputGroup,
+    InputRightElement,
+} from "@chakra-ui/react";
 import { Auth } from "aws-amplify";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { useSetRecoilState } from "recoil";
 
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator } from "@store/user";
@@ -11,6 +26,7 @@ export default function SignIn() {
     const [isLoginFailed, setIsLoginFailed] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isRevealPassword, setIsRevealPassword] = useState(false);
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
     const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
 
@@ -53,7 +69,19 @@ export default function SignIn() {
                     </FormControl>
                     <FormControl id="password">
                         <FormLabel>Password</FormLabel>
-                        <Input onChange={handlePasswordChange} type="password" />
+                        <InputGroup>
+                            <Input onChange={handlePasswordChange} type={isRevealPassword ? "text" : "password"} />
+                            <InputRightElement>
+                                <IconButton
+                                    aria-label={""}
+                                    icon={isRevealPassword === true ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                    onClick={() => {
+                                        setIsRevealPassword(!isRevealPassword);
+                                    }}
+                                    variant="ghost"
+                                />
+                            </InputRightElement>
+                        </InputGroup>
                     </FormControl>
                     <Stack spacing={6}>
                         <Stack align={"start"} justify={"space-between"} direction={{ base: "column", sm: "row" }}>
