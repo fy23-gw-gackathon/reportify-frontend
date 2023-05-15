@@ -119,7 +119,7 @@ paths:
         description: 組織更新リクエスト
       tags:
         - Organization
-  /organization/{organizationCode}/reports/{reportId}:
+  /organizations/{organizationCode}/reports/{reportId}:
     parameters:
       - schema:
           type: string

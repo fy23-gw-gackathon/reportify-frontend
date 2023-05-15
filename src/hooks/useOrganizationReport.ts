@@ -5,17 +5,17 @@ import { ReportResponse } from "@api/@types";
 import { authenticatedUserTokenRecoilState } from "@store/user";
 import { ApiClientWithAuthToken } from "@utils/api-client";
 
-type UseOrganizationReportsResponse = {
-    reports: ReportResponse[];
+type UseOrganizationReportResponse = {
+    report: ReportResponse;
     error: Error;
 };
-export const useOrganizationReports = (organizationCode: string): UseOrganizationReportsResponse => {
+
+export const useOrganizationReport = (organizationCode: string, reportId: string): UseOrganizationReportResponse => {
     const userTokenState = useRecoilValue(authenticatedUserTokenRecoilState);
     const api = ApiClientWithAuthToken(userTokenState.idToken);
-    const { data, error } = useAspidaSWR(api.organizations._organizationCode(organizationCode).reports, { refreshInterval: 10 });
-
+    const { data, error } = useAspidaSWR(api.organizations._organizationCode(organizationCode).reports._reportId(reportId));
     return {
-        reports: data ? data.reports : [],
+        report: data as ReportResponse,
         error,
     };
 };

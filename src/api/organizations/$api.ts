@@ -3,8 +3,9 @@ import { dataToURLString } from "aspida";
 import type { Methods as Methods0 } from ".";
 import type { Methods as Methods1 } from "./_organizationCode@string";
 import type { Methods as Methods2 } from "./_organizationCode@string/reports";
-import type { Methods as Methods3 } from "./_organizationCode@string/users";
-import type { Methods as Methods4 } from "./_organizationCode@string/users/_userId@string";
+import type { Methods as Methods3 } from "./_organizationCode@string/reports/_reportId@string";
+import type { Methods as Methods4 } from "./_organizationCode@string/users";
+import type { Methods as Methods5 } from "./_organizationCode@string/users/_userId@string";
 import type { AspidaClient, BasicHeaders } from "aspida";
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
@@ -23,6 +24,19 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
 
             return {
                 reports: {
+                    _reportId: (val2: string) => {
+                        const prefix2 = `${prefix0}${PATH1}/${val2}`;
+
+                        return {
+                            get: (option?: { config?: T | undefined } | undefined) =>
+                                fetch<void, BasicHeaders, Methods3["get"]["status"]>(prefix, prefix2, GET, option).send(),
+                            $get: (option?: { config?: T | undefined } | undefined) =>
+                                fetch<void, BasicHeaders, Methods3["get"]["status"]>(prefix, prefix2, GET, option)
+                                    .send()
+                                    .then((r) => r.body),
+                            $path: () => `${prefix}${prefix2}`,
+                        };
+                    },
                     /**
                      * @returns OK
                      */
@@ -52,19 +66,19 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                             /**
                              * @param option.body - ユーザーロール更新リクエスト
                              */
-                            put: (option: { body: Methods4["put"]["reqBody"]; config?: T | undefined }) =>
-                                fetch<void, BasicHeaders, Methods4["put"]["status"]>(prefix, prefix2, PUT, option).send(),
+                            put: (option: { body: Methods5["put"]["reqBody"]; config?: T | undefined }) =>
+                                fetch<void, BasicHeaders, Methods5["put"]["status"]>(prefix, prefix2, PUT, option).send(),
                             /**
                              * @param option.body - ユーザーロール更新リクエスト
                              */
-                            $put: (option: { body: Methods4["put"]["reqBody"]; config?: T | undefined }) =>
-                                fetch<void, BasicHeaders, Methods4["put"]["status"]>(prefix, prefix2, PUT, option)
+                            $put: (option: { body: Methods5["put"]["reqBody"]; config?: T | undefined }) =>
+                                fetch<void, BasicHeaders, Methods5["put"]["status"]>(prefix, prefix2, PUT, option)
                                     .send()
                                     .then((r) => r.body),
                             delete: (option?: { config?: T | undefined } | undefined) =>
-                                fetch<void, BasicHeaders, Methods4["delete"]["status"]>(prefix, prefix2, DELETE, option).send(),
+                                fetch<void, BasicHeaders, Methods5["delete"]["status"]>(prefix, prefix2, DELETE, option).send(),
                             $delete: (option?: { config?: T | undefined } | undefined) =>
-                                fetch<void, BasicHeaders, Methods4["delete"]["status"]>(prefix, prefix2, DELETE, option)
+                                fetch<void, BasicHeaders, Methods5["delete"]["status"]>(prefix, prefix2, DELETE, option)
                                     .send()
                                     .then((r) => r.body),
                             $path: () => `${prefix}${prefix2}`,
@@ -74,24 +88,24 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                      * @returns OK
                      */
                     get: (option?: { config?: T | undefined } | undefined) =>
-                        fetch<Methods3["get"]["resBody"], BasicHeaders, Methods3["get"]["status"]>(prefix, `${prefix0}${PATH2}`, GET, option).json(),
+                        fetch<Methods4["get"]["resBody"], BasicHeaders, Methods4["get"]["status"]>(prefix, `${prefix0}${PATH2}`, GET, option).json(),
                     /**
                      * @returns OK
                      */
                     $get: (option?: { config?: T | undefined } | undefined) =>
-                        fetch<Methods3["get"]["resBody"], BasicHeaders, Methods3["get"]["status"]>(prefix, `${prefix0}${PATH2}`, GET, option)
+                        fetch<Methods4["get"]["resBody"], BasicHeaders, Methods4["get"]["status"]>(prefix, `${prefix0}${PATH2}`, GET, option)
                             .json()
                             .then((r) => r.body),
                     /**
                      * @param option.body - メンバー招待リクエスト
                      */
-                    post: (option: { body: Methods3["post"]["reqBody"]; config?: T | undefined }) =>
-                        fetch<void, BasicHeaders, Methods3["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option).send(),
+                    post: (option: { body: Methods4["post"]["reqBody"]; config?: T | undefined }) =>
+                        fetch<void, BasicHeaders, Methods4["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option).send(),
                     /**
                      * @param option.body - メンバー招待リクエスト
                      */
-                    $post: (option: { body: Methods3["post"]["reqBody"]; config?: T | undefined }) =>
-                        fetch<void, BasicHeaders, Methods3["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option)
+                    $post: (option: { body: Methods4["post"]["reqBody"]; config?: T | undefined }) =>
+                        fetch<void, BasicHeaders, Methods4["post"]["status"]>(prefix, `${prefix0}${PATH2}`, POST, option)
                             .send()
                             .then((r) => r.body),
                     $path: () => `${prefix}${prefix0}${PATH2}`,

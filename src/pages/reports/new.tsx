@@ -19,8 +19,8 @@ import {
     Tooltip,
     useBoolean,
     Heading,
+    useColorMode,
 } from "@chakra-ui/react";
-import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
@@ -32,6 +32,7 @@ import { Title } from "@components/Layouts";
 import { useOrganization } from "@hooks/useOrganization";
 import { authenticatedUserTokenRecoilState } from "@store/user";
 import { ApiClientWithAuthToken } from "@utils/api-client";
+import { markdownIt } from "@utils/markdown";
 
 const MarkdownEditor = dynamic(() => import("react-markdown-editor-lite"), {
     ssr: false,
@@ -112,14 +113,13 @@ export default function New() {
     const userTokenState = useRecoilValue(authenticatedUserTokenRecoilState);
     const api = ApiClientWithAuthToken(userTokenState.idToken);
     const reportsClient = api.organizations._organizationCode(organization.code).reports;
-
+    const { colorMode } = useColorMode();
     const toast = useToast({
         isClosable: true,
         position: "bottom-left",
     });
 
     const router = useRouter();
-    const mdParser = new MarkdownIt(/* Markdown-it options */);
     const [isLoading, setLoading] = useBoolean(false);
 
     const handlePost = useCallback(async () => {
@@ -150,17 +150,18 @@ export default function New() {
             <Title title={"新規投稿"}></Title>
             <Grid gap={4} templateColumns="repeat(12, 1fr)" w={"full"} my={4}>
                 <GridItem colSpan={8}>
-                    <Box h={500}>
+                    <Card h={500} shadow={"none"}>
                         <MarkdownEditor
-                            style={{ height: "500px", borderRadius: "3px" }}
-                            renderHTML={(text) => mdParser.render(text)}
+                            className={colorMode === "dark" ? "markdown-body-dark" : "markdown-body"}
+                            style={{ height: "500px", borderRadius: "3px", backgroundColor: "inherit", color: "black" }}
+                            renderHTML={(text) => markdownIt.render(text)}
                             view={{ menu: true, md: true, html: false }}
                             canView={{ menu: true, md: true, html: true, both: true, fullScreen: true, hideMenu: true }}
                             value={value}
                             autoFocus={false}
                             onChange={({ text }) => setValue(text)}
                         />
-                    </Box>
+                    </Card>
                     <HStack justifyContent={"end"} my={4}>
                         <Button
                             pr={6}
