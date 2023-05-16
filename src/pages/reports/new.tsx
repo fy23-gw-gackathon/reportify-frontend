@@ -21,6 +21,7 @@ import {
     Heading,
     keyframes,
     Flex,
+    useColorMode,
 } from "@chakra-ui/react";
 import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
@@ -210,11 +211,17 @@ const AccordionRow = ({
     title,
     ...attrs
 }: { active?: boolean; overRequiredCount?: boolean; title: string } & AccordionPanelProps) => {
+    const { colorMode } = useColorMode();
     return (
         <AccordionItem>
             <AccordionButton w={"full"}>
                 <HStack justifyContent={"space-between"} w={"full"}>
-                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active} overRequiredCount={overRequiredCount}>
+                    <TextWithStatus
+                        color={active ? (colorMode === "light" ? "black" : "white") : "gray"}
+                        fontSize={14}
+                        active={active}
+                        overRequiredCount={overRequiredCount}
+                    >
                         {title}
                     </TextWithStatus>
                     <AccordionIcon display={"block"} />
