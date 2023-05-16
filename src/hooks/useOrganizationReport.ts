@@ -6,7 +6,7 @@ import { authenticatedUserTokenRecoilState } from "@store/user";
 import { ApiClientWithAuthToken } from "@utils/api-client";
 
 type UseOrganizationReportResponse = {
-    report: ReportResponse;
+    report: ReportResponse | undefined;
     error: Error;
 };
 
@@ -15,7 +15,7 @@ export const useOrganizationReport = (organizationCode: string, reportId: string
     const api = ApiClientWithAuthToken(userTokenState.idToken);
     const { data, error } = useAspidaSWR(api.organizations._organizationCode(organizationCode).reports._reportId(reportId));
     return {
-        report: data as ReportResponse,
+        report: data,
         error,
     };
 };

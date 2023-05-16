@@ -32,11 +32,17 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
                             const prefix3 = `${prefix1}${PATH1}/${val3}`;
 
                             return {
+                                /**
+                                 * @returns OK
+                                 */
                                 get: (option?: { config?: T | undefined } | undefined) =>
-                                    fetch<void, BasicHeaders, Methods3["get"]["status"]>(prefix, prefix3, GET, option).send(),
+                                    fetch<Methods3["get"]["resBody"], BasicHeaders, Methods3["get"]["status"]>(prefix, prefix3, GET, option).json(),
+                                /**
+                                 * @returns OK
+                                 */
                                 $get: (option?: { config?: T | undefined } | undefined) =>
-                                    fetch<void, BasicHeaders, Methods3["get"]["status"]>(prefix, prefix3, GET, option)
-                                        .send()
+                                    fetch<Methods3["get"]["resBody"], BasicHeaders, Methods3["get"]["status"]>(prefix, prefix3, GET, option)
+                                        .json()
                                         .then((r) => r.body),
                                 $path: () => `${prefix}${prefix3}`,
                             };
