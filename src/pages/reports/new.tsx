@@ -19,6 +19,8 @@ import {
     Tooltip,
     useBoolean,
     Heading,
+    keyframes,
+    Flex,
     useColorMode,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
@@ -197,7 +199,7 @@ export default function New() {
 const TextWithStatus = ({ active, overRequiredCount, ...attrs }: { active: boolean; overRequiredCount: boolean } & TextProps) => {
     return (
         <HStack>
-            {active ? overRequiredCount ? <CheckCircleIcon color="green" /> : <WarningIcon color="orange" /> : <WarningIcon color="lightgray" />}
+            {active ? <StatusWithRipple active={overRequiredCount} /> : <WarningIcon color="lightgray" />}
             <Text {...attrs}>{attrs.children}</Text>
         </HStack>
     );
@@ -209,11 +211,17 @@ const AccordionRow = ({
     title,
     ...attrs
 }: { active?: boolean; overRequiredCount?: boolean; title: string } & AccordionPanelProps) => {
+    const { colorMode } = useColorMode();
     return (
         <AccordionItem>
             <AccordionButton w={"full"}>
                 <HStack justifyContent={"space-between"} w={"full"}>
-                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active} overRequiredCount={overRequiredCount}>
+                    <TextWithStatus
+                        color={active ? (colorMode === "light" ? "black" : "white") : "gray"}
+                        fontSize={14}
+                        active={active}
+                        overRequiredCount={overRequiredCount}
+                    >
                         {title}
                     </TextWithStatus>
                     <AccordionIcon display={"block"} />
@@ -234,7 +242,7 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                     return (
                         <AccordionRow title={hint.title} active={isActive} key={hint.title} overRequiredCount={wordCount >= hint.requiredWordCount}>
                             <Text fontSize={13}>{hint.body}</Text>
-                            <HStack my={2}>
+                            <Flex justify={"start"} wrap={"wrap"} gap={2} my={2}>
                                 {hint.tags &&
                                     hint.tags.map((tag) => (
                                         <Tooltip key={tag} px={2} fontSize={12} hasArrow isDisabled={isActive} label={`${tag}を追加`} rounded={3}>
@@ -250,7 +258,7 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                                             </Button>
                                         </Tooltip>
                                     ))}
-                            </HStack>
+                            </Flex>
                             <Text
                                 mt={6}
                                 color={isActive ? (wordCount >= hint.requiredWordCount ? "green" : "orange") : "gray"}
@@ -261,5 +269,58 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                     );
                 })}
         </Accordion>
+    );
+};
+
+const StatusWithRipple = ({ active }: { active: boolean }) => {
+    const size = "16px";
+
+    const pulseRing = keyframes`
+	  0% {
+	    transform: scale(0.33);
+	  }
+	  40%,
+	  50% {
+	    opacity: 0;
+	  }
+	  100% {
+	    opacity: 0;
+	  }
+	`;
+
+    const checked = keyframes`
+	  0%, 100% {
+	    transform: scale(0);
+	  }
+	`;
+
+    return (
+        <Flex align="center" justify="center">
+            <Box
+                as="div"
+                pos="relative"
+                w={size}
+                h={size}
+                _before={{
+                    content: "''",
+                    position: "absolute",
+                    display: "block",
+                    width: "400%",
+                    height: "400%",
+                    boxSizing: "border-box",
+                    marginLeft: "-150%",
+                    marginTop: "-150%",
+                    borderRadius: "50%",
+                    bgColor: active ? "white" : "orange",
+                    animation: `2.25s ${active ? checked : pulseRing} cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
+                }}
+            >
+                {active ? (
+                    <CheckCircleIcon color="green" pos="absolute" bg={"inherit"} top={0} left={0} rounded={50} />
+                ) : (
+                    <WarningIcon color="orange" pos="absolute" top={0} bg={"inherit"} left={0} rounded={50} />
+                )}
+            </Box>
+        </Flex>
     );
 };
