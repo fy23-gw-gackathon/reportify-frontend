@@ -35,25 +35,26 @@ export default function Reports() {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {reports.map((report: ReportResponse) => {
-                                        return (
-                                            <Tr
-                                                key={report.id}
-                                                onClick={() => {
-                                                    router.push({ pathname: `/reports/[report_id]`, query: { report_id: report.id } });
-                                                }}
-                                            >
-                                                <Td>{report.timestamp}</Td>
-                                                <Td>{report.userName}</Td>
-                                                <Td>
-                                                    <ReportStatusTag report={report} />
-                                                </Td>
-                                                <Td>
-                                                    <Text>{report.body}</Text>
-                                                </Td>
-                                            </Tr>
-                                        );
-                                    })}
+                                    {reports &&
+                                        reports.map((report: ReportResponse) => {
+                                            return (
+                                                <Tr
+                                                    key={report.id}
+                                                    onClick={() => {
+                                                        router.push({ pathname: `/reports/[report_id]`, query: { report_id: report.id } });
+                                                    }}
+                                                >
+                                                    <Td>{report.timestamp}</Td>
+                                                    <Td>{report.userName}</Td>
+                                                    <Td>
+                                                        <ReportStatusTag report={report} />
+                                                    </Td>
+                                                    <Td>
+                                                        <Text>{report.body}</Text>
+                                                    </Td>
+                                                </Tr>
+                                            );
+                                        })}
                                 </Tbody>
                             </Table>
                         </TableContainer>
