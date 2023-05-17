@@ -25,7 +25,7 @@ const _Layout = ({ children }: Props) => {
         <Container as={Stack} align={{ base: "center" }} justify={{ base: "space-between" }} minW={"full"} h={"100vh"} p={0}>
             {router.pathname !== "/auth/sign_in" && isAuthenticated && idToken && (
                 <HStack w={"full"} h={"full"} spacing={0}>
-                    <Sidebar></Sidebar>
+                    <Sidebar />
                     <VStack justify={{ base: "space-between" }} w={"full"} h={"full"} spacing={0}>
                         <Header />
                         <VStack
@@ -41,7 +41,7 @@ const _Layout = ({ children }: Props) => {
                             <Box w={"calc(100vw - 256px)"} px={6} py={4}>
                                 {children}
                             </Box>
-                            <Footer></Footer>
+                            <Footer />
                         </VStack>
                     </VStack>
                 </HStack>

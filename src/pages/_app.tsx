@@ -7,6 +7,8 @@ import type { AppProps } from "next/app";
 
 import { Layout } from "@components/Layouts/Layout";
 import { AuthProvider } from "@components/Providers";
+import "@styles/github-markdown-light.css";
+import "@styles/github-markdown-dark.css";
 
 const authConfig = {
     aws_project_region: process.env.NEXT_PUBLIC_AWS_PROJECT_REGION,
