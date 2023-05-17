@@ -19,8 +19,10 @@ import {
     Tooltip,
     useBoolean,
     Heading,
+    keyframes,
+    Flex,
+    useColorMode,
 } from "@chakra-ui/react";
-import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
@@ -32,6 +34,7 @@ import { Title } from "@components/Layouts";
 import { useOrganization } from "@hooks/useOrganization";
 import { authenticatedUserTokenRecoilState } from "@store/user";
 import { ApiClientWithAuthToken } from "@utils/api-client";
+import { markdownIt } from "@utils/markdown";
 
 const MarkdownEditor = dynamic(() => import("react-markdown-editor-lite"), {
     ssr: false,
@@ -112,14 +115,13 @@ export default function New() {
     const userTokenState = useRecoilValue(authenticatedUserTokenRecoilState);
     const api = ApiClientWithAuthToken(userTokenState.idToken);
     const reportsClient = api.organizations._organizationCode(organization.code).reports;
-
+    const { colorMode } = useColorMode();
     const toast = useToast({
         isClosable: true,
         position: "bottom-left",
     });
 
     const router = useRouter();
-    const mdParser = new MarkdownIt(/* Markdown-it options */);
     const [isLoading, setLoading] = useBoolean(false);
 
     const handlePost = useCallback(async () => {
@@ -150,17 +152,18 @@ export default function New() {
             <Title title={"新規投稿"}></Title>
             <Grid gap={4} templateColumns="repeat(12, 1fr)" w={"full"} my={4}>
                 <GridItem colSpan={8}>
-                    <Box h={500}>
+                    <Card h={500} shadow={"none"}>
                         <MarkdownEditor
-                            style={{ height: "500px", borderRadius: "3px" }}
-                            renderHTML={(text) => mdParser.render(text)}
+                            className={colorMode === "dark" ? "markdown-body-dark" : "markdown-body"}
+                            style={{ height: "500px", borderRadius: "3px", backgroundColor: "inherit", color: "black" }}
+                            renderHTML={(text) => markdownIt.render(text)}
                             view={{ menu: true, md: true, html: false }}
                             canView={{ menu: true, md: true, html: true, both: true, fullScreen: true, hideMenu: true }}
                             value={value}
                             autoFocus={false}
                             onChange={({ text }) => setValue(text)}
                         />
-                    </Box>
+                    </Card>
                     <HStack justifyContent={"end"} my={4}>
                         <Button
                             pr={6}
@@ -196,7 +199,7 @@ export default function New() {
 const TextWithStatus = ({ active, overRequiredCount, ...attrs }: { active: boolean; overRequiredCount: boolean } & TextProps) => {
     return (
         <HStack>
-            {active ? overRequiredCount ? <CheckCircleIcon color="green" /> : <WarningIcon color="orange" /> : <WarningIcon color="lightgray" />}
+            {active ? <StatusWithRipple active={overRequiredCount} /> : <WarningIcon color="lightgray" />}
             <Text {...attrs}>{attrs.children}</Text>
         </HStack>
     );
@@ -208,11 +211,17 @@ const AccordionRow = ({
     title,
     ...attrs
 }: { active?: boolean; overRequiredCount?: boolean; title: string } & AccordionPanelProps) => {
+    const { colorMode } = useColorMode();
     return (
         <AccordionItem>
             <AccordionButton w={"full"}>
                 <HStack justifyContent={"space-between"} w={"full"}>
-                    <TextWithStatus color={active ? "black" : "gray"} fontSize={14} active={active} overRequiredCount={overRequiredCount}>
+                    <TextWithStatus
+                        color={active ? (colorMode === "light" ? "black" : "white") : "gray"}
+                        fontSize={14}
+                        active={active}
+                        overRequiredCount={overRequiredCount}
+                    >
                         {title}
                     </TextWithStatus>
                     <AccordionIcon display={"block"} />
@@ -233,7 +242,7 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                     return (
                         <AccordionRow title={hint.title} active={isActive} key={hint.title} overRequiredCount={wordCount >= hint.requiredWordCount}>
                             <Text fontSize={13}>{hint.body}</Text>
-                            <HStack my={2}>
+                            <Flex justify={"start"} wrap={"wrap"} gap={2} my={2}>
                                 {hint.tags &&
                                     hint.tags.map((tag) => (
                                         <Tooltip key={tag} px={2} fontSize={12} hasArrow isDisabled={isActive} label={`${tag}を追加`} rounded={3}>
@@ -249,7 +258,7 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                                             </Button>
                                         </Tooltip>
                                     ))}
-                            </HStack>
+                            </Flex>
                             <Text
                                 mt={6}
                                 color={isActive ? (wordCount >= hint.requiredWordCount ? "green" : "orange") : "gray"}
@@ -260,5 +269,58 @@ const HintAccordion = ({ value, hints, insertValue }: { value: string; hints: Hi
                     );
                 })}
         </Accordion>
+    );
+};
+
+const StatusWithRipple = ({ active }: { active: boolean }) => {
+    const size = "16px";
+
+    const pulseRing = keyframes`
+	  0% {
+	    transform: scale(0.33);
+	  }
+	  40%,
+	  50% {
+	    opacity: 0;
+	  }
+	  100% {
+	    opacity: 0;
+	  }
+	`;
+
+    const checked = keyframes`
+	  0%, 100% {
+	    transform: scale(0);
+	  }
+	`;
+
+    return (
+        <Flex align="center" justify="center">
+            <Box
+                as="div"
+                pos="relative"
+                w={size}
+                h={size}
+                _before={{
+                    content: "''",
+                    position: "absolute",
+                    display: "block",
+                    width: "400%",
+                    height: "400%",
+                    boxSizing: "border-box",
+                    marginLeft: "-150%",
+                    marginTop: "-150%",
+                    borderRadius: "50%",
+                    bgColor: active ? "white" : "orange",
+                    animation: `2.25s ${active ? checked : pulseRing} cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite`,
+                }}
+            >
+                {active ? (
+                    <CheckCircleIcon color="green" pos="absolute" bg={"inherit"} top={0} left={0} rounded={50} />
+                ) : (
+                    <WarningIcon color="orange" pos="absolute" top={0} bg={"inherit"} left={0} rounded={50} />
+                )}
+            </Box>
+        </Flex>
     );
 };

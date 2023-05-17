@@ -26,7 +26,7 @@ export const ManageStandardInformationCard = ({
                 </HStack>
             </CardHeader>
 
-            <Divider color={"gray.400"}></Divider>
+            <Divider color={"gray.400"} />
 
             <CardBody>
                 <Stack>
