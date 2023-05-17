@@ -31,7 +31,7 @@ export const _AuthProvider = ({ children }: Props) => {
                     router.replace("/auth/sign_in");
                 }
             });
-    }, [setAuthenticatedUser, authStatus]);
+    }, [setAuthenticatedUser, authStatus, setIdToken]);
     return <>{children}</>;
 };
 

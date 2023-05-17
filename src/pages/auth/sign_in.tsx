@@ -1,6 +1,6 @@
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { CSSProperties, useEffect } from "react";
 
 export default function SignIn() {
     const router = useRouter();
@@ -11,5 +11,17 @@ export default function SignIn() {
         }
     }, [authStatus, router]);
 
-    return <Authenticator hideSignUp />;
+    return (
+        <div style={fullHeightStyle}>
+            <Authenticator hideSignUp />
+        </div>
+    );
 }
+
+const fullHeightStyle: CSSProperties = {
+    display: "flex",
+    height: "100vh",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#EDF2F7",
+};
