@@ -22,7 +22,7 @@ import { MdLogout } from "react-icons/md";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useOrganizations } from "@hooks/useOrganizations";
-import { activatedOrganizationState } from "@store/organization";
+import { activatedOrganizationState, getStoredActivatedOrganizationCode, useActivatedOrganizationMutator } from "@store/organization";
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
 export const Header = () => {
@@ -31,7 +31,7 @@ export const Header = () => {
     const [activatedOrganization] = useRecoilState(activatedOrganizationState);
 
     useEffect(() => {
-        if (router.query.organization !== activatedOrganization.code) {
+        if (activatedOrganization && router.query.organization !== activatedOrganization.code) {
             router.replace({
                 query: { ...router.query, organization: activatedOrganization.code },
             });
@@ -49,7 +49,7 @@ export const Header = () => {
                 <HStack align={{ base: "center" }} justify={{ base: "start" }}>
                     {SearchOrganizationsMenu()}
                     <Text fontFamily={"heading"} textAlign={useBreakpointValue({ base: "center", md: "left" })}>
-                        {activatedOrganization.name}
+                        {activatedOrganization && activatedOrganization.name}
                     </Text>
                 </HStack>
 
@@ -73,7 +73,18 @@ const SearchOrganizationsMenu = () => {
     const router = useRouter();
     const { organizations } = useOrganizations();
 
-    const [activatedOrganization, setActivatedOrganization] = useRecoilState(activatedOrganizationState);
+    const [activatedOrganization] = useRecoilState(activatedOrganizationState);
+    const { setActivatedOrganization } = useActivatedOrganizationMutator();
+
+    useEffect(() => {
+        console.log("-------------------");
+        console.log(getStoredActivatedOrganizationCode());
+        console.log("-------------------");
+        const orgCode = activatedOrganization ? activatedOrganization.code : getStoredActivatedOrganizationCode();
+        const newOrganizationState = activatedOrganization && organizations.find((organization) => organization.code === orgCode);
+        if (newOrganizationState) setActivatedOrganization(newOrganizationState);
+        else if (organizations.length > 0) setActivatedOrganization(organizations[0]);
+    }, [organizations]);
 
     return (
         <Menu>
@@ -95,7 +106,7 @@ const SearchOrganizationsMenu = () => {
                                 setActivatedOrganization(organization);
                             }}
                         >
-                            {activatedOrganization.code === organization.code ? (
+                            {activatedOrganization && activatedOrganization.code === organization.code ? (
                                 <Text color={"teal.500"}>{organization.name}</Text>
                             ) : (
                                 <Text>{organization.name}</Text>

@@ -16,6 +16,7 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
     const PATH1 = "/reports";
     const PATH2 = "/users";
     const PATH3 = "/users/me";
+    const PATH5 = "/organizations/";
     const GET = "GET";
     const POST = "POST";
     const PUT = "PUT";
@@ -164,13 +165,13 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
              * @returns OK
              */
             get: (option?: { config?: T | undefined } | undefined) =>
-                fetch<Methods0["get"]["resBody"], BasicHeaders, Methods0["get"]["status"]>(prefix, PATH0, GET, option).json(),
+                fetch<Methods0["get"]["resBody"], BasicHeaders, Methods0["get"]["status"]>(prefix, PATH5, GET, option).json(),
             /**
              * 自分が所属する組織のみ取得できる
              * @returns OK
              */
             $get: (option?: { config?: T | undefined } | undefined) =>
-                fetch<Methods0["get"]["resBody"], BasicHeaders, Methods0["get"]["status"]>(prefix, PATH0, GET, option)
+                fetch<Methods0["get"]["resBody"], BasicHeaders, Methods0["get"]["status"]>(prefix, PATH5, GET, option)
                     .json()
                     .then((r) => r.body),
             $path: () => `${prefix}${PATH0}`,
