@@ -6,7 +6,7 @@ info:
   version: 1.0-SNAPSHOT
   description: ''
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api/v1
 paths:
   /organizations/{organizationCode}/reports:
     get:
@@ -47,10 +47,6 @@ paths:
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateReportRequest'
         '400':
           description: Bad Request
         '401':
@@ -62,6 +58,11 @@ paths:
       description: ''
       tags:
         - Report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
   /organizations/{organizationCode}:
     get:
       summary: 組織取得API
@@ -118,7 +119,7 @@ paths:
         description: 組織更新リクエスト
       tags:
         - Organization
-  /organization/{organizationCode}/reports/{reportId}:
+  /organizations/{organizationCode}/reports/{reportId}:
     parameters:
       - schema:
           type: string
@@ -139,16 +140,16 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
         '401':
           description: Unauthorized
         '403':
           description: Forbidden
         '404':
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReportResponse'
       operationId: getReport
       description: ''
   /organizations:

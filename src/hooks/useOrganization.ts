@@ -19,7 +19,7 @@ export const useOrganization = (): UseOrganizationResponse => {
         return await organizationsClient
             ._organizationCode(organizationCode)
             .$put({ body })
-            .then((organization) => {
+            .then((organization: OrganizationResponse) => {
                 setActivatedOrganization(organization);
             });
     };

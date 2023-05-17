@@ -1,6 +1,5 @@
 import { Container, Stack, VStack, HStack, Box, useColorModeValue } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import { useRecoilValue } from "recoil";
 
@@ -14,18 +13,17 @@ type Props = {
 };
 
 const _Layout = ({ children }: Props) => {
-    const router = useRouter();
     const { user } = useAuthenticatedUserState();
     // idToken取得前にuseSWRが走るの防ぐ為
     const { idToken } = useRecoilValue(authenticatedUserTokenRecoilState);
-    if (!user && !idToken) router.replace("/auth/sign_in");
+
     const bgColor = useColorModeValue("gray.100", "gray.900");
 
     return (
         <Container as={Stack} align={{ base: "center" }} justify={{ base: "space-between" }} minW={"full"} h={"100vh"} p={0}>
-            {router.pathname !== "/auth/sign_in" && user && idToken && (
+            {user && idToken && (
                 <HStack w={"full"} h={"full"} spacing={0}>
-                    <Sidebar></Sidebar>
+                    <Sidebar />
                     <VStack justify={{ base: "space-between" }} w={"full"} h={"full"} spacing={0}>
                         <Header />
                         <VStack
@@ -41,12 +39,11 @@ const _Layout = ({ children }: Props) => {
                             <Box w={"calc(100vw - 256px)"} px={6} py={4}>
                                 {children}
                             </Box>
-                            <Footer></Footer>
+                            <Footer />
                         </VStack>
                     </VStack>
                 </HStack>
             )}
-            {router.pathname === "/auth/sign_in" && children}
         </Container>
     );
 };
