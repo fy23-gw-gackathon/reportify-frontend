@@ -35,7 +35,7 @@ export default function Reports() {
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    {reports.map((report: ReportResponse) => {
+                                    {reports && reports.map((report: ReportResponse) => {
                                         return (
                                             <Tr
                                                 key={report.id}
