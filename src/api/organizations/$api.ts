@@ -9,7 +9,7 @@ import type { Methods as Methods5 } from "./_organizationCode@string/users/_user
 import type { AspidaClient, BasicHeaders } from "aspida";
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
-    const prefix = (baseURL === undefined ? "http://localhost:8080" : baseURL).replace(/\/$/, "");
+    const prefix = (baseURL === undefined ? "http://localhost:8080/api/v1" : baseURL).replace(/\/$/, "");
     const PATH0 = "/organizations";
     const PATH1 = "/reports";
     const PATH2 = "/users";
