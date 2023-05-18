@@ -114,7 +114,7 @@ export default function New() {
     const [value, setValue] = useState("");
     const userTokenState = useRecoilValue(authenticatedUserTokenRecoilState);
     const api = ApiClientWithAuthToken(userTokenState.idToken);
-    const reportsClient = api.organizations._organizationCode(organization.code).reports;
+    const reportsClient = api.organizations._organizationCode(organization ? organization.code : "invalid").reports;
     const { colorMode } = useColorMode();
     const toast = useToast({
         isClosable: true,
