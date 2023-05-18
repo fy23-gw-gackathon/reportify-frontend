@@ -16,7 +16,6 @@ export const useActivatedOrganizationMutator = () => {
         (state: OrganizationResponse) => {
             setState(state);
             localStorage.setItem("activatedOrganizationCode", state.code);
-            console.log(localStorage.getItem("activatedOrganizationCode"));
         },
         [setState]
     );

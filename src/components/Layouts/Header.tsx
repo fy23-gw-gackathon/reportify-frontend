@@ -77,11 +77,8 @@ const SearchOrganizationsMenu = () => {
     const { setActivatedOrganization } = useActivatedOrganizationMutator();
 
     useEffect(() => {
-        console.log("-------------------");
-        console.log(getStoredActivatedOrganizationCode());
-        console.log("-------------------");
         const orgCode = activatedOrganization ? activatedOrganization.code : getStoredActivatedOrganizationCode();
-        const newOrganizationState = activatedOrganization && organizations.find((organization) => organization.code === orgCode);
+        const newOrganizationState = organizations.find((organization) => organization.code === orgCode);
         if (newOrganizationState) setActivatedOrganization(newOrganizationState);
         else if (organizations.length > 0) setActivatedOrganization(organizations[0]);
     }, [organizations]);
