@@ -13,7 +13,7 @@ type Props = {
 };
 
 const _Layout = ({ children }: Props) => {
-    const { isAuthenticated } = useAuthenticatedUserState();
+    const { user } = useAuthenticatedUserState();
     // idToken取得前にuseSWRが走るの防ぐ為
     const { idToken } = useRecoilValue(authenticatedUserTokenRecoilState);
 
@@ -21,7 +21,7 @@ const _Layout = ({ children }: Props) => {
 
     return (
         <Container as={Stack} align={{ base: "center" }} justify={{ base: "space-between" }} minW={"full"} h={"100vh"} p={0}>
-            {isAuthenticated && idToken && (
+            {user && idToken && (
                 <HStack w={"full"} h={"full"} spacing={0}>
                     <Sidebar />
                     <VStack justify={{ base: "space-between" }} w={"full"} h={"full"} spacing={0}>

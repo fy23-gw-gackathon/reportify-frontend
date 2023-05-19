@@ -21,7 +21,8 @@ import { useEffect } from "react";
 import { MdLogout } from "react-icons/md";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { activatedOrganizationState } from "@store/organization";
+import { useOrganizations } from "@hooks/useOrganizations";
+import { activatedOrganizationState, getStoredActivatedOrganizationCode, useActivatedOrganizationMutator } from "@store/organization";
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator, useAuthenticatedUserState } from "@store/user";
 
 export const Header = () => {
@@ -30,11 +31,10 @@ export const Header = () => {
     const [activatedOrganization] = useRecoilState(activatedOrganizationState);
 
     useEffect(() => {
-        if (router.query.organization !== activatedOrganization.code) {
-            // FIXME: 日報詳細画面でリロードすると「The provided href value is missing query values to be interpolated properly」とエラーが出る
-            // router.replace({
-            //     query: { ...router.query, organization: activatedOrganization.code },
-            // });
+        if (activatedOrganization && router.query.organization !== activatedOrganization.code) {
+            router.replace({
+                query: { ...router.query, organization: activatedOrganization.code },
+            });
         }
     }, [router, activatedOrganization]);
 
@@ -49,7 +49,7 @@ export const Header = () => {
                 <HStack align={{ base: "center" }} justify={{ base: "start" }}>
                     {SearchOrganizationsMenu()}
                     <Text fontFamily={"heading"} textAlign={useBreakpointValue({ base: "center", md: "left" })}>
-                        {activatedOrganization.name}
+                        {activatedOrganization && activatedOrganization.name}
                     </Text>
                 </HStack>
 
@@ -71,8 +71,17 @@ const SwitchColorModeButton = () => {
 
 const SearchOrganizationsMenu = () => {
     const router = useRouter();
-    const [activatedOrganization, setActivatedOrganization] = useRecoilState(activatedOrganizationState);
-    const organizations = [activatedOrganization];
+    const { organizations } = useOrganizations();
+
+    const [activatedOrganization] = useRecoilState(activatedOrganizationState);
+    const { setActivatedOrganization } = useActivatedOrganizationMutator();
+
+    useEffect(() => {
+        const orgCode = activatedOrganization ? activatedOrganization.code : getStoredActivatedOrganizationCode();
+        const newOrganizationState = organizations.find((organization) => organization.code === orgCode);
+        if (newOrganizationState) setActivatedOrganization(newOrganizationState);
+        else if (organizations.length > 0) setActivatedOrganization(organizations[0]);
+    }, [organizations]);
 
     return (
         <Menu>
@@ -94,7 +103,7 @@ const SearchOrganizationsMenu = () => {
                                 setActivatedOrganization(organization);
                             }}
                         >
-                            {activatedOrganization.code === organization.code ? (
+                            {activatedOrganization && activatedOrganization.code === organization.code ? (
                                 <Text color={"teal.500"}>{organization.name}</Text>
                             ) : (
                                 <Text>{organization.name}</Text>
@@ -111,10 +120,10 @@ const UserMenu = () => {
     const router = useRouter();
     const { setAuthenticatedUser } = useAuthenticatedUserMutator();
     const setIdToken = useSetRecoilState(authenticatedUserTokenRecoilState);
-    const { email } = useAuthenticatedUserState();
+    const { user } = useAuthenticatedUserState();
     const onSignOutClick = async () => {
         await Auth.signOut();
-        setAuthenticatedUser(undefined);
+        setAuthenticatedUser({ user: undefined });
         setIdToken({ idToken: undefined });
         router.replace("/auth/sign_in");
     };

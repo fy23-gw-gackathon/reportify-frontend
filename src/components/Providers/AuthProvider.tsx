@@ -5,6 +5,7 @@ import { ReactNode, useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 
 import { authenticatedUserTokenRecoilState, useAuthenticatedUserMutator } from "@store/user";
+import { ApiClientWithAuthToken } from "@utils/api-client";
 
 type Props = {
     children: ReactNode;
@@ -24,10 +25,18 @@ export const _AuthProvider = ({ children }: Props) => {
             .then(async (cognitoUser: CognitoUser | undefined) => {
                 if (cognitoUser) {
                     const idToken = await cognitoUser.getSignInUserSession()?.getIdToken().getJwtToken();
-                    setIdToken({ idToken });
-                }
-                setAuthenticatedUser(cognitoUser);
-                if (!cognitoUser) {
+                    try {
+                        const api = ApiClientWithAuthToken(idToken);
+                        const user = await (await api.users.me.get()).body;
+                        setAuthenticatedUser({ user });
+                        setIdToken({ idToken });
+                    } catch (error) {
+                        setAuthenticatedUser({ user: undefined });
+                        await cognitoUser.signOut();
+                        console.log(error);
+                    }
+                } else {
+                    setAuthenticatedUser({ user: undefined });
                     router.replace("/auth/sign_in");
                 }
             });

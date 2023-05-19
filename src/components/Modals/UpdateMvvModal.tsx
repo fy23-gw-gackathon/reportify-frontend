@@ -14,7 +14,7 @@ import {
     Textarea,
     useToast,
 } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { OrganizationResponse, UpdateOrganizationRequest } from "@api/@types";
@@ -30,20 +30,30 @@ export const UpdateMvvModal = ({
     updateOrganization: (organizationCode: string, body: UpdateOrganizationRequest) => Promise<void>;
 }) => {
     const { isOpen, onClose } = disclosure;
-    const {
-        handleSubmit,
-        register,
-        formState: { errors },
-        getValues,
-    } = useForm<UpdateOrganizationRequest>({
-        defaultValues: {
+    const defaultValues = useMemo(() => {
+        return {
             mission: organization.mvv.mission,
             vision: organization.mvv.vision,
             value: organization.mvv.value,
             name: organization.name,
             code: organization.code,
-        },
+        };
+    }, [organization]);
+
+    const {
+        handleSubmit,
+        register,
+        formState: { errors },
+        getValues,
+        reset,
+    } = useForm<UpdateOrganizationRequest>({
+        defaultValues,
     });
+
+    useEffect(() => {
+        reset(defaultValues);
+    }, [defaultValues]);
+
     const toast = useToast({
         title: "MVVの更新",
         isClosable: true,

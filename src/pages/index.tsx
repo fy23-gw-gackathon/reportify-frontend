@@ -8,14 +8,14 @@ import { useAuthenticatedUserState } from "@store/user";
 export default function Home() {
     const router = useRouter();
 
-    const { isAuthenticated } = useAuthenticatedUserState();
+    const { user } = useAuthenticatedUserState();
 
     // 既にログイン済みの場合は日報リスト画面へリダイレクトする
     useEffect(() => {
-        if (isAuthenticated) {
+        if (user) {
             void router.push("/reports");
         }
-    }, [router, isAuthenticated]);
+    }, [router, user]);
 
     return (
         <VStack align={"start"} gap={2} w={"full"}>

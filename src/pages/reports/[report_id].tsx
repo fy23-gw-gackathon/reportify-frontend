@@ -17,7 +17,7 @@ export default function Report() {
 
     const reportId = router.query.report_id;
     const { organization } = useOrganization();
-    const { report, error } = useOrganizationReport(organization.code, reportId as string);
+    const { report, error } = useOrganizationReport(organization ? organization.code : "invalid", reportId as string);
 
     if (error) {
         return <Error statusCode={404} />;

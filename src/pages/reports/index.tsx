@@ -12,7 +12,7 @@ import { useOrganizationReports } from "@hooks/useOrganizationReports";
 export default function Reports() {
     const router = useRouter();
     const { organization } = useOrganization();
-    const { reports } = useOrganizationReports(organization.code);
+    const { reports } = useOrganizationReports(organization ? organization.code : "");
 
     return (
         <VStack align={"start"} gap={2}>
