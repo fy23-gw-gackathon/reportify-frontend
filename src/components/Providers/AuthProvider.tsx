@@ -32,6 +32,7 @@ export const _AuthProvider = ({ children }: Props) => {
                         setIdToken({ idToken });
                     } catch (error) {
                         setAuthenticatedUser({ user: undefined });
+                        await cognitoUser.signOut();
                         console.log(error);
                     }
                 } else {
