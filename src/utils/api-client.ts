@@ -17,7 +17,8 @@ axios.interceptors.response.use(
     }
 );
 
-export const ApiClientWithAuthToken = (idToken: string | undefined) => api(aspida(axios, { headers: { Authorization: `Bearer ${idToken}` } }));
+export const ApiClientWithAuthToken = (idToken: string | undefined) =>
+    api(aspida(axios, { headers: { Authorization: `Bearer ${idToken}`, baseURL: process.env.NEXT_PUBLIC_API_BASE_URL } }));
 
-const ApiClient = api(aspida(axios, {}));
+const ApiClient = api(aspida(axios, { baseURL: process.env.NEXT_PUBLIC_API_BASE_URL }));
 export default ApiClient;
