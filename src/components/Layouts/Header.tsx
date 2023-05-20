@@ -13,12 +13,13 @@ import {
     MenuDivider,
     useColorMode,
     Link,
+    Button,
 } from "@chakra-ui/react";
 import { Auth } from "aws-amplify";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { MdLogout } from "react-icons/md";
+import { HiUserCircle } from "react-icons/hi";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useOrganizations } from "@hooks/useOrganizations";
@@ -128,7 +129,18 @@ const UserMenu = () => {
         router.replace("/auth/sign_in");
     };
 
-    return <IconButton aria-label={""} icon={<MdLogout />} onClick={onSignOutClick} variant="ghost"></IconButton>;
+    return (
+        <Menu>
+            <MenuList>
+                <MenuItem minH="48px" onClick={onSignOutClick}>
+                    <Text fontWeight="medium">ログアウト</Text>
+                </MenuItem>
+            </MenuList>
+            <MenuButton as={Button} p={2} leftIcon={<HiUserCircle size={22} />} variant="ghost">
+                <Text fontWeight="bold">{user?.name}</Text>
+            </MenuButton>
+        </Menu>
+    );
 };
 
 const InfoMenu = () => {
