@@ -17,7 +17,10 @@ axios.interceptors.response.use(
     }
 );
 
-export const ApiClientWithAuthToken = (idToken: string | undefined) => api(aspida(axios, { headers: { Authorization: `Bearer ${idToken}` } }));
-
-const ApiClient = api(aspida(axios, {}));
-export default ApiClient;
+export const ApiClientWithAuthToken = (idToken: string | undefined) =>
+    api(
+        aspida(axios, {
+            headers: { Authorization: `Bearer ${idToken}` },
+            baseURL: `${process.env.NEXT_PUBLIC_API_ENDPOINT_PATH ? process.env.NEXT_PUBLIC_API_ENDPOINT_PATH : "http://localhost:8080"}/api/v1`,
+        })
+    );
